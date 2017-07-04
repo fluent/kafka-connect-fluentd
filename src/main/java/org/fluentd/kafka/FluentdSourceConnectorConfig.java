@@ -34,7 +34,11 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
             .define(FLUENTD_BIND, Type.STRING, Importance.HIGH, "");
     }
 
-    public String getFluentd(){
-        return this.getString(MY_SETTING_CONFIG);
+    public String getFluentdPort() {
+        return this.getString(FLUENTD_PORT);
+    }
+
+    public String getFluentdBind() {
+        return this.getString(FLUENTD_BIND);
     }
 }
