@@ -9,7 +9,18 @@ description = """kafka-connect-fluentd"""
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
+  }
+}
 
+apply plugin: "com.github.johnrengelman.plugin-shadow"
 
 repositories {
      maven { url "http://packages.confluent.io/maven/" }
