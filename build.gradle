@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.fluentd.kafka'
+version = '0.0.1'
+
+description = """kafka-connect-fluentd"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+
+repositories {
+        
+     maven { url "http://packages.confluent.io/maven/" }
+     maven { url "https://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    compile(group: 'org.apache.kafka', name: 'connect-api', version:'0.10.0.0-cp1') {
+       /* This dependency was originally in the Maven provided scope, but the project was not of type war.
+       This behavior is not yet supported by Gradle, so this dependency has been converted to a compile dependency.
+       Please review and delete this closure when resolved. */
+    }
+}
