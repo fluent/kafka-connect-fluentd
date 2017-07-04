@@ -11,41 +11,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FluentdSourceConnector extends SourceConnector {
-  private static Logger log = LoggerFactory.getLogger(FluentdSourceConnector.class);
-  private FluentdSourceConnectorConfig config;
+    private static Logger log = LoggerFactory.getLogger(FluentdSourceConnector.class);
+    private FluentdSourceConnectorConfig config;
 
-  @Override
-  public String version() {
-    return VersionUtil.getVersion();
-  }
+    @Override
+    public String version() {
+        return VersionUtil.getVersion();
+    }
 
-  @Override
-  public void start(Map<String, String> map) {
-    config = new FluentdSourceConnectorConfig(map);
+    @Override
+    public void start(Map<String, String> map) {
+        config = new FluentdSourceConnectorConfig(map);
 
-    //TODO: Add things you need to do to setup your connector.
-  }
+        //TODO: Add things you need to do to setup your connector.
+    }
 
-  @Override
-  public Class<? extends Task> taskClass() {
-    //TODO: Return your task implementation.
-    return FluentdSourceTask.class;
-  }
+    @Override
+    public Class<? extends Task> taskClass() {
+        return FluentdSourceTask.class;
+    }
 
-  @Override
-  public List<Map<String, String>> taskConfigs(int i) {
-    //TODO: Define the individual task configurations that will be executed.
+    @Override
+    public List<Map<String, String>> taskConfigs(int i) {
+        //TODO: Define the individual task configurations that will be executed.
 
-    throw new UnsupportedOperationException("This has not been implemented.");
-  }
+        throw new UnsupportedOperationException("This has not been implemented.");
+    }
 
-  @Override
-  public void stop() {
-    //TODO: Do things that are necessary to stop your connector.
-  }
+    @Override
+    public void stop() {
+        //TODO: Do things that are necessary to stop your connector.
+    }
 
-  @Override
-  public ConfigDef config() {
-    return FluentdSourceConnectorConfig.conf();
-  }
+    @Override
+    public ConfigDef config() {
+        return FluentdSourceConnectorConfig.conf();
+    }
 }

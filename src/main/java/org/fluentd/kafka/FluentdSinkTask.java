@@ -15,31 +15,31 @@ import java.util.Map;
 import java.util.Set;
 
 public class FluentdSinkTask extends SinkTask {
-  private static Logger log = LoggerFactory.getLogger(FluentdSinkTask.class);
+    private static Logger log = LoggerFactory.getLogger(FluentdSinkTask.class);
 
-  @Override
-  public String version() {
-    return VersionUtil.getVersion();
-  }
+    @Override
+    public String version() {
+        return VersionUtil.getVersion();
+    }
 
-  @Override
-  public void start(Map<String, String> map) {
-    //TODO: Create resources like database or api connections here.
-  }
+    @Override
+    public void start(Map<String, String> map) {
+        //TODO: Create resources like database or api connections here.
+    }
 
-  @Override
-  public void put(Collection<SinkRecord> collection) {
+    @Override
+    public void put(Collection<SinkRecord> collection) {
 
-  }
+    }
 
-  @Override
-  public void flush(Map<TopicPartition, OffsetAndMetadata> map) {
+    @Override
+    public void flush(Map<TopicPartition, OffsetAndMetadata> map) {
 
-  }
+    }
 
-  @Override
-  public void stop() {
-    //Close resources here.
-  }
+    @Override
+    public void stop() {
+        //Close resources here.
+    }
 
 }
