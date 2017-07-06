@@ -43,8 +43,8 @@ public class FluentdSourceTask extends SourceTask {
                         null, // partition
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
-                        record.schema(),
-                        record
+                        Schema.STRING_SCHEMA,
+                        entry.getRecord().toJson()
                 );
                 queue.add(sourceRecord);
             });
