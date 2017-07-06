@@ -2,6 +2,9 @@ package org.fluentd.kafka;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
@@ -9,6 +12,10 @@ import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import influent.forward.ForwardCallback;
+import influent.forward.ForwardServer;
+import influent.EventEntry;
 
 public class FluentdSourceConnector extends SourceConnector {
     private static Logger log = LoggerFactory.getLogger(FluentdSourceConnector.class);
@@ -21,6 +28,7 @@ public class FluentdSourceConnector extends SourceConnector {
 
     @Override
     public void start(Map<String, String> map) {
+        log.info("FluentdSourceConnector start!!!!!");
         config = new FluentdSourceConnectorConfig(map);
 
         //TODO: Add things you need to do to setup your connector.
@@ -34,8 +42,11 @@ public class FluentdSourceConnector extends SourceConnector {
     @Override
     public List<Map<String, String>> taskConfigs(int i) {
         //TODO: Define the individual task configurations that will be executed.
-
-        throw new UnsupportedOperationException("This has not been implemented.");
+        List<Map<String, String>> taskConfigs = new ArrayList<>();
+        Map<String, String> config = new HashMap<>();
+        config.put("foo", "bar");
+        taskConfigs.add(config);
+        return taskConfigs;
     }
 
     @Override
