@@ -28,7 +28,6 @@ public class FluentdSourceConnector extends SourceConnector {
 
     @Override
     public void start(Map<String, String> map) {
-        log.info("FluentdSourceConnector start!!!!!");
         config = new FluentdSourceConnectorConfig(map);
 
         //TODO: Add things you need to do to setup your connector.
@@ -43,9 +42,9 @@ public class FluentdSourceConnector extends SourceConnector {
     public List<Map<String, String>> taskConfigs(int i) {
         //TODO: Define the individual task configurations that will be executed.
         List<Map<String, String>> taskConfigs = new ArrayList<>();
-        Map<String, String> config = new HashMap<>();
-        config.put("foo", "bar");
-        taskConfigs.add(config);
+        Map<String, String> taskConfig = new HashMap<>();
+        taskConfig.put("foo", "bar");
+        taskConfigs.add(taskConfig);
         return taskConfigs;
     }
 
