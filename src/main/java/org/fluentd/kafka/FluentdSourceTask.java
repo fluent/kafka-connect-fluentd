@@ -34,17 +34,8 @@ public class FluentdSourceTask extends SourceTask {
         EventEntryConverter converter = new EventEntryConverter();
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
-                // TODO Construct SourceRecord
-                // SchemaAndValue record = converter.fromEventEntry(entry);
-                Long timestamp = entry.getTime().toEpochMilli();
-                Schema valueSchema = SchemaBuilder.map(
-                        Schema.STRING_SCHEMA,
-                        Schema.STRING_SCHEMA
-                ).build();
-                Map<String, String> record = new HashMap<>();
-                entry.getRecord().map().forEach((key, value) -> {
-                    record.put(key.asStringValue().asString(), value.asStringValue().asString());
-                });
+                Struct record = converter.toStruct(entry);
+                // Long timestamp = entry.getTime().toEpochMilli();
                 SourceRecord sourceRecord = new SourceRecord(
                         null,
                         null,
@@ -52,7 +43,7 @@ public class FluentdSourceTask extends SourceTask {
                         null, // partition
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
-                        valueSchema,
+                        record.schema(),
                         record
                 );
                 queue.add(sourceRecord);
@@ -72,7 +63,7 @@ public class FluentdSourceTask extends SourceTask {
         List<SourceRecord> records = new ArrayList<>();
         while (!queue.isEmpty()) {
             SourceRecord record = this.queue.poll();
-            log.info("{}", record);
+            log.debug("{}", record);
             if (record != null) {
                 records.add(record);
             }
