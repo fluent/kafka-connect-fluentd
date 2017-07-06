@@ -1,12 +1,10 @@
 package org.fluentd.kafka;
 
-import org.apache.kafka.connect.data.Field;
-import org.apache.kafka.connect.data.Schema;
-import org.apache.kafka.connect.data.SchemaBuilder;
-import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.data.*;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
+import org.msgpack.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +12,10 @@ import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
 import influent.EventEntry;
 
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,26 +31,48 @@ public class FluentdSourceTask extends SourceTask {
 
     @Override
     public void start(Map<String, String> map) {
+        EventEntryConverter converter = new EventEntryConverter();
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
                 // TODO Construct SourceRecord
-                SourceRecord record = new SourceRecord();
-                this.queue.add(record);
+                // SchemaAndValue record = converter.fromEventEntry(entry);
+                Long timestamp = entry.getTime().toEpochMilli();
+                Schema valueSchema = SchemaBuilder.map(
+                        Schema.STRING_SCHEMA,
+                        Schema.STRING_SCHEMA
+                ).build();
+                Map<String, String> record = new HashMap<>();
+                entry.getRecord().map().forEach((key, value) -> {
+                    record.put(key.asStringValue().asString(), value.asStringValue().asString());
+                });
+                SourceRecord sourceRecord = new SourceRecord(
+                        null,
+                        null,
+                        stream.getTag().getName(),
+                        null, // partition
+                        Schema.STRING_SCHEMA,
+                        stream.getTag().getName(),
+                        valueSchema,
+                        record
+                );
+                queue.add(sourceRecord);
             });
             return CompletableFuture.completedFuture(null);
         });
         // TODO configure server
         server = new ForwardServer
             .Builder(callback)
+            .localAddress(24224)
             .build();
         server.start();
     }
 
     @Override
     public List<SourceRecord> poll() throws InterruptedException {
-        List<SourceRecord> records = new ArrayList<SourceRecord>();
+        List<SourceRecord> records = new ArrayList<>();
         while (!queue.isEmpty()) {
             SourceRecord record = this.queue.poll();
+            log.info("{}", record);
             if (record != null) {
                 records.add(record);
             }
