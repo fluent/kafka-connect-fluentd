@@ -64,7 +64,11 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
         return this.getString(FLUENTD_BIND);
     }
 
-    public SocketAddress getLocalAddress() throws UnknownHostException {
-        return new InetSocketAddress(InetAddress.getByName(getFluentdBind()), getFluentdPort());
+    public SocketAddress getLocalAddress() throws FluentdConnectorConfigError {
+        try {
+            return new InetSocketAddress(InetAddress.getByName(getFluentdBind()), getFluentdPort());
+        } catch (UnknownHostException ex) {
+            throw new FluentdConnectorConfigError(ex.getMessage());
+        }
     }
 }

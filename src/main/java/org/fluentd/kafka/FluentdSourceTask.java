@@ -1,19 +1,14 @@
 package org.fluentd.kafka;
 
 import org.apache.kafka.connect.data.*;
-import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
-import org.msgpack.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
-import influent.EventEntry;
 
-import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.ArrayList;
@@ -47,7 +42,7 @@ public class FluentdSourceTask extends SourceTask {
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
                         Schema.STRING_SCHEMA,
-                        entry.getRecord().toJson()
+                        entry.getRecord().toJson() // TODO Optimize!!
                 );
                 queue.add(sourceRecord);
             });
@@ -59,10 +54,10 @@ public class FluentdSourceTask extends SourceTask {
                     .Builder(callback)
                     .localAddress(config.getLocalAddress())
                     .build();
-            server.start();
-        } catch (UnknownHostException ex) {
-            log.error("{}", ex);
+        } catch (FluentdConnectorConfigError ex) {
+            throw new RuntimeException(ex);
         }
+        server.start();
     }
 
     @Override
