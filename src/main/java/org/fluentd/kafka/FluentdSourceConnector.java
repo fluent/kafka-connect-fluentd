@@ -19,7 +19,7 @@ import influent.EventEntry;
 
 public class FluentdSourceConnector extends SourceConnector {
     private static Logger log = LoggerFactory.getLogger(FluentdSourceConnector.class);
-    private FluentdSourceConnectorConfig config;
+    private Map<String, String> properties;
 
     @Override
     public String version() {
@@ -27,10 +27,8 @@ public class FluentdSourceConnector extends SourceConnector {
     }
 
     @Override
-    public void start(Map<String, String> map) {
-        config = new FluentdSourceConnectorConfig(map);
-
-        //TODO: Add things you need to do to setup your connector.
+    public void start(Map<String, String> properties) {
+        this.properties = properties;
     }
 
     @Override
@@ -39,12 +37,10 @@ public class FluentdSourceConnector extends SourceConnector {
     }
 
     @Override
-    public List<Map<String, String>> taskConfigs(int i) {
+    public List<Map<String, String>> taskConfigs(int taskMax) {
         //TODO: Define the individual task configurations that will be executed.
         List<Map<String, String>> taskConfigs = new ArrayList<>();
-        Map<String, String> taskConfig = new HashMap<>();
-        taskConfig.put("foo", "bar");
-        taskConfigs.add(taskConfig);
+        taskConfigs.add(this.properties);
         return taskConfigs;
     }
 

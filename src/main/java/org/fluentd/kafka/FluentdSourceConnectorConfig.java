@@ -5,20 +5,40 @@ import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Type;
 import org.apache.kafka.common.config.ConfigDef.Importance;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 
 public class FluentdSourceConnectorConfig extends AbstractConfig {
 
+    /*
+     * in_forward configs
+     *   port
+     *   bind
+     *   linger_timeout
+     *   check_size_limit
+     *   chunk_size_warn_limit
+     *   skip_invalid_event
+     *   source_hostname_key
+     *   log_level
+     */
+    /*
+     * influent config
+     *   localAddress
+     *   chunkSizeLimit
+     *   sendBufferSize
+     *   receiveBufferSize
+     *   keepAliveEnabled
+     *   tcpNoDelayEnabled
+     *   workerPoolSize
+     */
     public static final String FLUENTD_PORT = "fluentd.port";
     public static final String FLUENTD_BIND = "fluentd.bind";
-    // in_forward configs
-    //   linger_timeout
-    //   check_size_limit
-    //   chunk_size_warn_limit
-    //   skip_invalid_event
-    //   source_hostname_key
-    //   log_level
+    // public static final String FLUENTD_CHUNK_SIZE_LIMIT = "fluentd.chunk.size.limit";
+    // public static final String FLUENTD_WORKER_POOL_SIZE = "fluentd.worker.pool.size";
 
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
         super(config, parsedConfig);
@@ -30,15 +50,21 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public static ConfigDef conf() {
         return new ConfigDef()
-            .define(FLUENTD_PORT, Type.STRING, Importance.HIGH, "")
-            .define(FLUENTD_BIND, Type.STRING, Importance.HIGH, "");
+                .define(FLUENTD_PORT, Type.INT, 24224, Importance.HIGH,
+                        "Port number to listen. Default: 24224")
+                .define(FLUENTD_BIND, Type.STRING, "0.0.0.0", Importance.HIGH,
+                        "Bind address to listen. Default: 0.0.0.0");
     }
 
-    public String getFluentdPort() {
-        return this.getString(FLUENTD_PORT);
+    public int getFluentdPort() {
+        return this.getInt(FLUENTD_PORT);
     }
 
     public String getFluentdBind() {
         return this.getString(FLUENTD_BIND);
+    }
+
+    public SocketAddress getLocalAddress() throws UnknownHostException {
+        return new InetSocketAddress(InetAddress.getByName(getFluentdBind()), getFluentdPort());
     }
 }

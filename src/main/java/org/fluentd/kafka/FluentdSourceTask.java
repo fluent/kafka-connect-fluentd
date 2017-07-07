@@ -12,6 +12,7 @@ import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
 import influent.EventEntry;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 public class FluentdSourceTask extends SourceTask {
     static final Logger log = LoggerFactory.getLogger(FluentdSourceTask.class);
+    private FluentdSourceConnectorConfig config;
     private ForwardServer server;
     private final ConcurrentLinkedDeque<SourceRecord> queue = new ConcurrentLinkedDeque<>();
 
@@ -30,7 +32,8 @@ public class FluentdSourceTask extends SourceTask {
     }
 
     @Override
-    public void start(Map<String, String> map) {
+    public void start(Map<String, String> properties) {
+        config = new FluentdSourceConnectorConfig(properties);
         EventEntryConverter converter = new EventEntryConverter();
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
@@ -51,11 +54,15 @@ public class FluentdSourceTask extends SourceTask {
             return CompletableFuture.completedFuture(null);
         });
         // TODO configure server
-        server = new ForwardServer
-            .Builder(callback)
-            .localAddress(24224)
-            .build();
-        server.start();
+        try {
+            server = new ForwardServer
+                    .Builder(callback)
+                    .localAddress(config.getLocalAddress())
+                    .build();
+            server.start();
+        } catch (UnknownHostException ex) {
+            log.error("{}", ex);
+        }
     }
 
     @Override
