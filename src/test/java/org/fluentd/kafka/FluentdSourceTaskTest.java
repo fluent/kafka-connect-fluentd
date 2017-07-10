@@ -42,4 +42,19 @@ public class FluentdSourceTaskTest {
         assertEquals("test", sourceRecord.key());
         assertEquals("{\"message\":\"This is a test message\"}", sourceRecord.value());
     }
+
+    @Test
+    public void multipleRecords() throws InterruptedException, IOException {
+        Map<String, String> config = new HashMap<>();
+        task.start(config);
+        Map<String, Object> record1 = new HashMap<>();
+        record1.put("message", "This is a test message1");
+        Map<String, Object> record2 = new HashMap<>();
+        record2.put("message", "This is a test message2");
+        fluency.emit("test", record1);
+        fluency.emit("test", record2);
+        Thread.sleep(1000);
+        List<SourceRecord> sourceRecords = task.poll();
+        assertEquals(2, sourceRecords.size());
+    }
 }
