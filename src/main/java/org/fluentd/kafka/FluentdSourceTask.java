@@ -31,10 +31,8 @@ public class FluentdSourceTask extends SourceTask {
     @Override
     public void start(Map<String, String> properties) {
         config = new FluentdSourceConnectorConfig(properties);
-        EventEntryConverter converter = new EventEntryConverter();
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
-                Struct record = converter.toStruct(entry);
                 // Long timestamp = entry.getTime().toEpochMilli();
                 SourceRecord sourceRecord = new SourceRecord(
                         null,
