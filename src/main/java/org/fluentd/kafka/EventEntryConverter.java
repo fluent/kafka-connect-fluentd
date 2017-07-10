@@ -5,7 +5,6 @@ import org.apache.kafka.connect.data.*;
 import org.msgpack.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.xml.validation.SchemaFactory;
 import java.util.ArrayList;
@@ -52,11 +51,11 @@ public class EventEntryConverter {
             case BOOLEAN:
                 return Schema.OPTIONAL_BOOLEAN_SCHEMA;
             case ARRAY:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             case MAP:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             default:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
         }
     }
 
@@ -72,11 +71,11 @@ public class EventEntryConverter {
             case BOOLEAN:
                 return value.asBooleanValue().asBooleanValue();
             case ARRAY:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             case MAP:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             default:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
         }
     }
 }
