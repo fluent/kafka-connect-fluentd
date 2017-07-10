@@ -1,5 +1,7 @@
 package org.fluentd.kafka;
 
+import influent.forward.ForwardCallback;
+import influent.forward.ForwardServer;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
@@ -8,14 +10,11 @@ import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import influent.forward.ForwardCallback;
-import influent.forward.ForwardServer;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class FluentdSourceTask extends SourceTask {
     static final Logger log = LoggerFactory.getLogger(FluentdSourceTask.class);
@@ -34,15 +33,17 @@ public class FluentdSourceTask extends SourceTask {
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
                 // Long timestamp = entry.getTime().toEpochMilli();
+                EventEntryConverter c = new EventEntryConverter();
+                Struct s = c.toStruct(entry);
                 SourceRecord sourceRecord = new SourceRecord(
                         null,
                         null,
                         stream.getTag().getName(),
-                        null, // partition
+                        null,
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
-                        Schema.STRING_SCHEMA,
-                        entry.getRecord().toJson() // TODO Optimize!!
+                        s.schema(),
+                        s
                 );
                 queue.add(sourceRecord);
             });
