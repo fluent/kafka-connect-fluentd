@@ -38,5 +38,8 @@ public class FluentdSourceTaskTest {
         Thread.sleep(1000);
         List<SourceRecord> sourceRecords = task.poll();
         assertEquals(1, sourceRecords.size());
+        SourceRecord sourceRecord = sourceRecords.get(0);
+        assertEquals("test", sourceRecord.key());
+        assertEquals("{\"message\":\"This is a test message\"}", sourceRecord.value());
     }
 }
