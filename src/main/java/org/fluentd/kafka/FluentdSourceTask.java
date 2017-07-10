@@ -1,6 +1,8 @@
 package org.fluentd.kafka;
 
-import org.apache.kafka.connect.data.*;
+import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
@@ -55,7 +57,7 @@ public class FluentdSourceTask extends SourceTask {
                     .localAddress(config.getLocalAddress())
                     .build();
         } catch (FluentdConnectorConfigError ex) {
-            throw new RuntimeException(ex);
+            throw new ConnectException(ex);
         }
         server.start();
     }
