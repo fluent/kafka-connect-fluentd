@@ -28,7 +28,7 @@ public class EventEntryConverter {
                 return;
             }
             String k = key.asStringValue().asString();
-            builder.field(k, toType(value));
+            builder.field(k, toType(value)).optional();
             record.put(k, toValue((value)));
         });
         Schema schema = builder.build();
@@ -43,13 +43,13 @@ public class EventEntryConverter {
         switch (value.getValueType()) {
             case NIL:
             case STRING:
-                return Schema.OPTIONAL_STRING_SCHEMA;
+                return Schema.STRING_SCHEMA;
             case FLOAT:
-                return Schema.OPTIONAL_FLOAT32_SCHEMA;
+                return Schema.FLOAT32_SCHEMA;
             case INTEGER:
-                return Schema.OPTIONAL_INT32_SCHEMA;
+                return Schema.INT32_SCHEMA;
             case BOOLEAN:
-                return Schema.OPTIONAL_BOOLEAN_SCHEMA;
+                return Schema.BOOLEAN_SCHEMA;
             case ARRAY:
                 throw new UnsupportedOperationException();
             case MAP:
