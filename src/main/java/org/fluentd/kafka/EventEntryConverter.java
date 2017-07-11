@@ -87,7 +87,7 @@ public class EventEntryConverter {
             case INTEGER:
                 return value.asIntegerValue().toInt();
             case BOOLEAN:
-                return value.asBooleanValue().asBooleanValue();
+                return value.asBooleanValue().getBoolean();
             case ARRAY:
                 return buildValue(value);
             case MAP:
