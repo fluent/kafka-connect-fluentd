@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.komamitsu.fluency.Fluency;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,45 @@ public class FluentdSourceTaskTest {
         Struct struct = new Struct(schema);
         struct.put("message", "This is a test message");
         assertEquals(struct, sourceRecord.value());
+    }
+
+    @Test
+    public void oneRecordWithNullValue() throws InterruptedException, IOException {
+        Map<String, String> config = new HashMap<>();
+        task.start(config);
+        Map<String, Object> record = new HashMap<>();
+        record.put("message", null);
+        fluency.emit("test", record);
+        Thread.sleep(1000);
+        List<SourceRecord> sourceRecords = task.poll();
+        assertEquals(1, sourceRecords.size());
+        SourceRecord sourceRecord = sourceRecords.get(0);
+        assertEquals("test", sourceRecord.key());
+        Schema schema = SchemaBuilder.struct()
+                .field("message", Schema.OPTIONAL_STRING_SCHEMA)
+                .build();
+        Struct struct = new Struct(schema);
+        struct.put("message", null);
+        assertEquals(struct, sourceRecord.value());
+    }
+
+    @Test
+    public void nestedRecord() throws IOException, InterruptedException {
+        Map<String, String> config = new HashMap<>();
+        task.start(config);
+        Map<String, Double> version = new HashMap<>();
+        version.put("stable", 0.12);
+        version.put("unstable", 0.14);
+        List<String> versions = new ArrayList<>();
+        versions.add("v0.12");
+        versions.add("v0.14");
+        Map<String, Object> record = new HashMap<>();
+        record.put("versions", versions);
+        record.put("version", version);
+        fluency.emit("test", record);
+        Thread.sleep(1000);
+        List<SourceRecord> sourceRecords = task.poll();
+        assertEquals(1, sourceRecords.size());
     }
 
     @Test

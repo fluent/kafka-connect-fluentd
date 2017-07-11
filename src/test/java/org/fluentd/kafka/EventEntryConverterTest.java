@@ -90,6 +90,28 @@ public class EventEntryConverterTest {
     }
 
     @Test
+    public void nestedArrayAndMap() {
+        Map<Value, Value> map = new HashMap<>();
+        List<Value> childArray = new ArrayList<>();
+        Map<Value, Value> childMap = new HashMap<>();
+        childArray.add(ValueFactory.newString("v0.12"));
+        childArray.add(ValueFactory.newString("v0.14"));
+        childMap.put(ValueFactory.newString("unstable"), ValueFactory.newFloat(0.14));
+        childMap.put(ValueFactory.newString("stable"), ValueFactory.newFloat(0.12));
+        map.put(ValueFactory.newString("versions"), ValueFactory.newArray(childArray));
+        map.put(ValueFactory.newString("version"), ValueFactory.newMap(childMap));
+        ImmutableMapValue record = ValueFactory.newMap(map);
+
+        EventEntry entry = EventEntry.of(Instant.now(), record);
+        Struct struct = converter.toStruct(entry);
+        List<String> versions = struct.getArray("versions");
+        assertThat(versions, contains("v0.12", "v0.14"));
+        Struct version = struct.getStruct("version");
+        assertEquals(0.12, version.getFloat32("stable"), 0.01);
+        assertEquals(0.14, version.getFloat32("unstable"), 0.01);
+    }
+
+    @Test
     public void nestedArray() {
         Map<Value, Value> map = new HashMap<>();
         List<Value> childArray = new ArrayList<>();
