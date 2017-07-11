@@ -38,6 +38,30 @@ public class EventEntryConverterTest {
     }
 
     @Test
+    public void booleanValue() {
+        Map<Value, Value> map = new HashMap<>();
+        map.put(ValueFactory.newString("key"), ValueFactory.newBoolean(true));
+        ImmutableMapValue record = ValueFactory.newMap(map);
+
+        EventEntry entry = EventEntry.of(Instant.now(), record);
+        Struct struct = converter.toStruct(entry);
+        System.out.println(struct);
+        assertEquals(true, struct.getBoolean("key"));
+    }
+
+    @Test
+    public void nullValue() {
+        Map<Value, Value> map = new HashMap<>();
+        map.put(ValueFactory.newString("key"), ValueFactory.newNil());
+        ImmutableMapValue record = ValueFactory.newMap(map);
+
+        EventEntry entry = EventEntry.of(Instant.now(), record);
+        Struct struct = converter.toStruct(entry);
+        System.out.println(struct);
+        assertNull(struct.get("key"));
+    }
+
+    @Test
     public void mixed() {
         Map<Value, Value> map = new HashMap<>();
         map.put(ValueFactory.newString("key"), ValueFactory.newString("value"));

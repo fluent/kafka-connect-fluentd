@@ -32,10 +32,7 @@ public class EventEntryConverter {
         });
         Schema schema = builder.build();
         Struct struct = new Struct(schema);
-        record.forEach((key, value) -> {
-            System.out.println(value.getClass());
-            struct.put(key, value);
-        });
+        record.forEach((key, value) -> struct.put(key, value));
         return struct;
     }
 
@@ -80,6 +77,7 @@ public class EventEntryConverter {
     private Object toValue(Value value) {
         switch (value.getValueType()) {
             case NIL:
+                return null;
             case STRING:
                 return value.asStringValue().asString();
             case FLOAT:
@@ -87,7 +85,7 @@ public class EventEntryConverter {
             case INTEGER:
                 return value.asIntegerValue().toInt();
             case BOOLEAN:
-                return value.asBooleanValue().asBooleanValue();
+                return value.asBooleanValue().getBoolean();
             case ARRAY:
                 return buildValue(value);
             case MAP:
