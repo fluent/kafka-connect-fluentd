@@ -32,7 +32,6 @@ public class EventEntryConverter {
         });
         Schema schema = builder.build();
         Struct struct = new Struct(schema);
-        System.out.println(schema.field("key").schema().field("childKey").schema());
         record.forEach((key, value) -> {
             System.out.println(value.getClass());
             struct.put(key, value);
