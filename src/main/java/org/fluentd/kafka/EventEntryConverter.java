@@ -6,7 +6,6 @@ import org.msgpack.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.validation.SchemaFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +27,14 @@ public class EventEntryConverter {
                 return;
             }
             String k = key.asStringValue().asString();
-            builder.field(k, toType(value)).optional();
-            record.put(k, toValue((value)));
+            builder.field(k, toType(value));
+            record.put(k, toValue(value));
         });
         Schema schema = builder.build();
         Struct struct = new Struct(schema);
+        System.out.println(schema.field("key").schema().field("childKey").schema());
         record.forEach((key, value) -> {
+            System.out.println(value.getClass());
             struct.put(key, value);
         });
         return struct;
@@ -43,20 +44,38 @@ public class EventEntryConverter {
         switch (value.getValueType()) {
             case NIL:
             case STRING:
-                return Schema.STRING_SCHEMA;
+                return Schema.OPTIONAL_STRING_SCHEMA;
             case FLOAT:
-                return Schema.FLOAT32_SCHEMA;
+                return Schema.OPTIONAL_FLOAT32_SCHEMA;
             case INTEGER:
-                return Schema.INT32_SCHEMA;
+                return Schema.OPTIONAL_INT32_SCHEMA;
             case BOOLEAN:
-                return Schema.BOOLEAN_SCHEMA;
+                return Schema.OPTIONAL_BOOLEAN_SCHEMA;
             case ARRAY:
-                throw new UnsupportedOperationException();
+                return buildSchema(value);
             case MAP:
-                throw new UnsupportedOperationException();
+                return buildSchema(value);
             default:
                 throw new UnsupportedOperationException();
         }
+    }
+
+    private Schema buildSchema(Value value) {
+        SchemaBuilder builder;
+        switch (value.getValueType()) {
+            case MAP:
+                builder = SchemaBuilder.struct();
+                value.asMapValue().map().forEach((key, val) -> builder.field(key.asStringValue().asString(), toType(val)));
+                break;
+            case ARRAY:
+                // Array cannot include mixed types such as [String, Integer, ...]
+                Value firstValue = value.asArrayValue().get(0);
+                builder = SchemaBuilder.array(toType(firstValue));
+                break;
+            default:
+                throw new UnsupportedOperationException();
+        }
+        return builder.build();
     }
 
     private Object toValue(Value value) {
@@ -71,9 +90,26 @@ public class EventEntryConverter {
             case BOOLEAN:
                 return value.asBooleanValue().asBooleanValue();
             case ARRAY:
-                throw new UnsupportedOperationException();
+                return buildValue(value);
             case MAP:
+                return buildValue(value);
+            default:
                 throw new UnsupportedOperationException();
+        }
+    }
+
+    private Object buildValue(Value value) {
+        switch (value.getValueType()) {
+            case ARRAY:
+                // array cannot include mixed types such as [String, Integer, ...]
+                List<Object> array = new ArrayList<>();
+                value.asArrayValue().forEach(val -> array.add(toValue(val)));
+                return array;
+            case MAP:
+                Schema schema = buildSchema(value);
+                Struct struct = new Struct(schema);
+                value.asMapValue().map().forEach((key, val) -> struct.put(key.asStringValue().asString(), toValue(val)));
+                return struct;
             default:
                 throw new UnsupportedOperationException();
         }
