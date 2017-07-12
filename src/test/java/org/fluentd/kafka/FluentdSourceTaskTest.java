@@ -1,8 +1,5 @@
 package org.fluentd.kafka;
 
-import org.apache.kafka.connect.data.Schema;
-import org.apache.kafka.connect.data.SchemaBuilder;
-import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FluentdSourceTaskTest {
     private FluentdSourceTask task;
@@ -45,12 +43,8 @@ public class FluentdSourceTaskTest {
         assertEquals(1, sourceRecords.size());
         SourceRecord sourceRecord = sourceRecords.get(0);
         assertEquals("test", sourceRecord.key());
-        Schema schema = SchemaBuilder.struct()
-                .field("message", Schema.OPTIONAL_STRING_SCHEMA)
-                .build();
-        Struct struct = new Struct(schema);
-        struct.put("message", "This is a test message");
-        assertEquals(struct, sourceRecord.value());
+        assertNull(sourceRecord.valueSchema());
+        assertEquals("{\"message\":\"This is a test message\"}", sourceRecord.value());
     }
 
     @Test
@@ -65,12 +59,8 @@ public class FluentdSourceTaskTest {
         assertEquals(1, sourceRecords.size());
         SourceRecord sourceRecord = sourceRecords.get(0);
         assertEquals("test", sourceRecord.key());
-        Schema schema = SchemaBuilder.struct()
-                .field("message", Schema.OPTIONAL_STRING_SCHEMA)
-                .build();
-        Struct struct = new Struct(schema);
-        struct.put("message", null);
-        assertEquals(struct, sourceRecord.value());
+        assertNull(sourceRecord.valueSchema());
+        assertEquals("{\"message\":null}", sourceRecord.value());
     }
 
     @Test
@@ -105,14 +95,9 @@ public class FluentdSourceTaskTest {
         Thread.sleep(1000);
         List<SourceRecord> sourceRecords = task.poll();
         assertEquals(2, sourceRecords.size());
-        Schema schema = SchemaBuilder.struct()
-                .field("message", Schema.OPTIONAL_STRING_SCHEMA)
-                .build();
-        Struct struct1 = new Struct(schema);
-        struct1.put("message", "This is a test message1");
-        Struct struct2 = new Struct(schema);
-        struct2.put("message", "This is a test message2");
-        assertEquals(struct1, sourceRecords.get(0).value());
-        assertEquals(struct2, sourceRecords.get(1).value());
+        assertNull(sourceRecords.get(0).valueSchema());
+        assertEquals("{\"message\":\"This is a test message1\"}", sourceRecords.get(0).value());
+        assertNull(sourceRecords.get(1).valueSchema());
+        assertEquals("{\"message\":\"This is a test message2\"}", sourceRecords.get(1).value());
     }
 }
