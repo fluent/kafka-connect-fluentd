@@ -3,7 +3,6 @@ package org.fluentd.kafka;
 import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
 import org.apache.kafka.connect.data.Schema;
-import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
@@ -32,9 +31,8 @@ public class FluentdSourceTask extends SourceTask {
         config = new FluentdSourceConnectorConfig(properties);
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
+                // TODO support timestamp
                 // Long timestamp = entry.getTime().toEpochMilli();
-                EventEntryConverter c = new EventEntryConverter();
-                Struct s = c.toStruct(entry);
                 SourceRecord sourceRecord = new SourceRecord(
                         null,
                         null,
@@ -42,8 +40,8 @@ public class FluentdSourceTask extends SourceTask {
                         null,
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
-                        s.schema(),
-                        s
+                        null,
+                        entry.getRecord().toJson()
                 );
                 queue.add(sourceRecord);
             });
