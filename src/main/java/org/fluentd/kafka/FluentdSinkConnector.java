@@ -1,5 +1,7 @@
 package org.fluentd.kafka;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,19 +35,17 @@ public class FluentdSinkConnector extends SinkConnector {
 
     @Override
     public Class<? extends Task> taskClass() {
-        //TODO: Return your task implementation.
         return FluentdSinkTask.class;
     }
 
     @Override
     public List<Map<String, String>> taskConfigs(int maxTasks) {
         //TODO: Define the individual task configurations that will be executed.
-
-        /**
-         * This is used to schedule the number of tasks that will be running. This should not exceed maxTasks.
-         */
-
-        throw new UnsupportedOperationException("This has not been implemented.");
+        List<Map<String, String>> taskConfigs = new ArrayList<>();
+        Map<String, String> taskConfig = new HashMap<>();
+        taskConfig.put(FluentdSinkConnectorConfig.FLUENTD_CONNECT, config.getFluentdConnect());
+        taskConfigs.add(taskConfig);
+        return taskConfigs;
     }
 
     @Override

@@ -5,17 +5,18 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
+import org.komamitsu.fluency.Fluency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class FluentdSinkTask extends SinkTask {
     private static Logger log = LoggerFactory.getLogger(FluentdSinkTask.class);
+    private static Fluency fluency;
+    private static SinkRecordConverter converter;
 
     @Override
     public String version() {
@@ -25,21 +26,57 @@ public class FluentdSinkTask extends SinkTask {
     @Override
     public void start(Map<String, String> map) {
         //TODO: Create resources like database or api connections here.
+        Fluency.Config fluencyConfig = new Fluency.Config();
+        FluentdSinkConnectorConfig config = new FluentdSinkConnectorConfig(map);
+        try {
+            fluency = Fluency.defaultFluency(config.getFluentdConnectAddresses(), fluencyConfig);
+        } catch (IOException e) {
+            throw new ConnectException(e);
+        }
+        converter = new SinkRecordConverter();
     }
 
     @Override
     public void put(Collection<SinkRecord> collection) {
-
+        collection.forEach(sinkRecord -> {
+            log.debug("key: {}, value: {}, class: {}, schema: {}",
+                    sinkRecord.key(),
+                    sinkRecord.value(),
+                    sinkRecord.value().getClass().getCanonicalName(),
+                    sinkRecord.valueSchema());
+            // TODO fluency.emit(sinkRecord.key(), record);
+            FluentdEventRecord eventRecord = converter.convert(sinkRecord);
+            log.info("{}", eventRecord);
+            try {
+                if (eventRecord.getEventTime() != null) {
+                    fluency.emit(eventRecord.getTag(), eventRecord.getEventTime(), eventRecord.getData());
+                } else if (eventRecord.getTimestamp() != null) {
+                    fluency.emit(eventRecord.getTag(), eventRecord.getTimestamp(), eventRecord.getData());
+                } else {
+                    fluency.emit(eventRecord.getTag(), eventRecord.getData());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
     public void flush(Map<TopicPartition, OffsetAndMetadata> map) {
-
+        try {
+            fluency.flush();
+        } catch (IOException e) {
+            throw new ConnectException(e);
+        }
     }
 
     @Override
     public void stop() {
-        //Close resources here.
+        try {
+            fluency.waitUntilAllBufferFlushed(3);
+        } catch (InterruptedException e) {
+            throw new ConnectException(e);
+        }
     }
 
 }
