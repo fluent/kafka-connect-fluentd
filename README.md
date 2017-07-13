@@ -24,11 +24,13 @@ $ ./bin/zookeeper-server-start.sh config/zookeeper.properties
 $ ./bin/kafka-server-start.sh config/server.properties
 ```
 
-Run kafka-connect-fluentd (FluentdSourceConnector):
+Run kafka-connect-fluentd (FluentdSourceConnector/FluentdSinkConnector):
 
 ```
 (on terminal 3)
-$ bin/connect-standalone.sh config/connect-standalone.properties /path/to/kafka-connect-fluentd/config/FluentdSourceConnector.properties config/connect-file-sink.properties
+$ bin/connect-standalone.sh config/connect-standalone.properties \
+    /path/to/kafka-connect-fluentd/config/FluentdSourceConnector.properties \
+    /path/to/kafka-connect-fluentd/config/FluentdSinkConnector.properties
 ```
 
 **:NOTE:**
@@ -45,6 +47,6 @@ $ echo '{"messmages": "Hi, Kafka connect!"}' | fluent-cat connect-test --time-as
 
 **NOTE:**
 
-Specify tag same as topics in FluentdSourceConnector.properties and connect-file-sink.properties.
+Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
 Use Fluentd v0.12.x because influent does not support nanoseconds yet.
 
