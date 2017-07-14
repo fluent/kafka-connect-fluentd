@@ -13,6 +13,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+     maven { url "http://packages.confluent.io/maven/" }
      maven { url "https://repo.maven.apache.org/maven2" }
 }
 dependencies {
