@@ -37,8 +37,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
      */
     public static final String FLUENTD_PORT = "fluentd.port";
     public static final String FLUENTD_BIND = "fluentd.bind";
-    // public static final String FLUENTD_CHUNK_SIZE_LIMIT = "fluentd.chunk.size.limit";
-    // public static final String FLUENTD_WORKER_POOL_SIZE = "fluentd.worker.pool.size";
+    public static final String FLUENTD_CHUNK_SIZE_LIMIT = "fluentd.chunk.size.limit";
+    public static final String FLUENTD_WORKER_POOL_SIZE = "fluentd.worker.pool.size";
 
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
         super(config, parsedConfig);
@@ -53,7 +53,11 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                 .define(FLUENTD_PORT, Type.INT, 24224, Importance.HIGH,
                         "Port number to listen. Default: 24224")
                 .define(FLUENTD_BIND, Type.STRING, "0.0.0.0", Importance.HIGH,
-                        "Bind address to listen. Default: 0.0.0.0");
+                        "Bind address to listen. Default: 0.0.0.0")
+                .define(FLUENTD_CHUNK_SIZE_LIMIT, Type.LONG, Long.MAX_VALUE, Importance.MEDIUM,
+                        "The size limit of the the received chunk. Default: Long.MAX_VALUE")
+                .define(FLUENTD_WORKER_POOL_SIZE, Type.INT, 1, Importance.MEDIUM,
+                        "The worker parallelism. Default: 1");
     }
 
     public int getFluentdPort() {
@@ -62,6 +66,14 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public String getFluentdBind() {
         return this.getString(FLUENTD_BIND);
+    }
+
+    public long getFluentdChunkSizeLimit() {
+        return this.getLong(FLUENTD_CHUNK_SIZE_LIMIT);
+    }
+
+    public int getFluentdWorkerPoolSize() {
+        return this.getInt(FLUENTD_WORKER_POOL_SIZE);
     }
 
     public SocketAddress getLocalAddress() throws FluentdConnectorConfigError {

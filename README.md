@@ -48,5 +48,4 @@ $ echo '{"messmages": "Hi, Kafka connect!"}' | fluent-cat connect-test --time-as
 **NOTE:**
 
 Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
-Use Fluentd v0.12.x because influent does not support nanoseconds yet.
 

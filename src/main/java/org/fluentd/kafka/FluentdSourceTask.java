@@ -45,6 +45,7 @@ public class FluentdSourceTask extends SourceTask {
                 );
                 queue.add(sourceRecord);
             });
+            // TODO complete this future when SourceTask#commit finishes
             return CompletableFuture.completedFuture(null);
         });
         // TODO configure server
@@ -52,6 +53,8 @@ public class FluentdSourceTask extends SourceTask {
             server = new ForwardServer
                     .Builder(callback)
                     .localAddress(config.getLocalAddress())
+                    .chunkSizeLimit(config.getFluentdChunkSizeLimit())
+                    .workerPoolSize(config.getFluentdWorkerPoolSize())
                     .build();
         } catch (FluentdConnectorConfigError ex) {
             throw new ConnectException(ex);
