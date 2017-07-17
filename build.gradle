@@ -25,5 +25,5 @@ dependencies {
        Please review and delete this closure when resolved. */
     }
     compile group: "org.komamitsu", name: "fluency", version: "1.4.0"
-    compile group: "com.okumin", name: "influent-java", version: "0.2.0"
+    compile group: "com.okumin", name: "influent-java", version: "0.3.0"
 }
