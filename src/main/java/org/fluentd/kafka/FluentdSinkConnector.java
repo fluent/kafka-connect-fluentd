@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class FluentdSinkConnector extends SinkConnector {
     private static Logger log = LoggerFactory.getLogger(FluentdSinkConnector.class);
     private FluentdSinkConnectorConfig config;
+    private Map<String, String> properties;
 
     @Override
     public String version() {
@@ -22,8 +23,8 @@ public class FluentdSinkConnector extends SinkConnector {
     }
 
     @Override
-    public void start(Map<String, String> map) {
-        config = new FluentdSinkConnectorConfig(map);
+    public void start(Map<String, String> properties) {
+        this.properties = properties;
 
         //TODO: Add things you need to do to setup your connector.
 
@@ -42,9 +43,7 @@ public class FluentdSinkConnector extends SinkConnector {
     public List<Map<String, String>> taskConfigs(int maxTasks) {
         //TODO: Define the individual task configurations that will be executed.
         List<Map<String, String>> taskConfigs = new ArrayList<>();
-        Map<String, String> taskConfig = new HashMap<>();
-        taskConfig.put(FluentdSinkConnectorConfig.FLUENTD_CONNECT, config.getFluentdConnect());
-        taskConfigs.add(taskConfig);
+        taskConfigs.add(this.properties);
         return taskConfigs;
     }
 

@@ -24,10 +24,19 @@ public class FluentdSinkTask extends SinkTask {
     }
 
     @Override
-    public void start(Map<String, String> map) {
+    public void start(Map<String, String> properties) {
         //TODO: Create resources like database or api connections here.
-        Fluency.Config fluencyConfig = new Fluency.Config();
-        FluentdSinkConnectorConfig config = new FluentdSinkConnectorConfig(map);
+        FluentdSinkConnectorConfig config = new FluentdSinkConnectorConfig(properties);
+        Fluency.Config fluencyConfig = new Fluency.Config()
+                .setMaxBufferSize(config.getFluentdClientMaxBufferSize())
+                .setBufferChunkInitialSize(config.getFluentdClientBufferChunkInitialSize())
+                .setBufferChunkRetentionSize(config.getFluentdClientBufferChunkRetentionSize())
+                .setFlushIntervalMillis(config.getFluentdClientFlushInterval())
+                .setAckResponseMode(config.getFluentdClientAckResponseMode())
+                .setFileBackupDir(config.getFluentdClientFileBackupDir())
+                .setWaitUntilBufferFlushed(config.getFluentdClientWaitUntilBufferFlushed())
+                .setWaitUntilFlusherTerminated(config.getFluentdClientWaitUntilFlusherTerminated())
+                .setJvmHeapBufferMode(config.getFluentdClientJvmHeapBufferMode());
         try {
             fluency = Fluency.defaultFluency(config.getFluentdConnectAddresses(), fluencyConfig);
         } catch (IOException e) {
