@@ -48,13 +48,26 @@ public class FluentdSourceTask extends SourceTask {
             // TODO complete this future when SourceTask#commit finishes
             return CompletableFuture.completedFuture(null);
         });
-        // TODO configure server
         try {
             server = new ForwardServer
                     .Builder(callback)
                     .localAddress(config.getLocalAddress())
                     .chunkSizeLimit(config.getFluentdChunkSizeLimit())
+                    .backlog(config.getFluentdBacklog())
+                    .sendBufferSize(config.getFluentdSendBufferSize())
+                    .receiveBufferSize(config.getFluentdReceveBufferSize())
+                    .keepAliveEnabled(config.getFluentdKeepAliveEnabled())
+                    .tcpNoDelayEnabled(config.getFluentdTcpNoDeleyEnabled())
                     .workerPoolSize(config.getFluentdWorkerPoolSize())
+                    /*
+                    .protocol(config.getFluentdProtocol())
+                    .tlsVersion(config.getFluentdTlsVersion())
+                    .keystorePath(config.getFluentdKeystorePath())
+                    .keyystorePassword(config.getFluentdKeystorePassword())
+                    .keyPassword(config.getFluentdKeyPassword())
+                    .trustStorePath(config.getFluentdTruststorePath())
+                    .trustStorePassword(config.getFluentdTruststorePassword())
+                    */
                     .build();
         } catch (FluentdConnectorConfigError ex) {
             throw new ConnectException(ex);
