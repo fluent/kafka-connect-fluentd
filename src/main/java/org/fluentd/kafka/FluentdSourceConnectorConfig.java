@@ -102,14 +102,6 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
         return getString(FLUENTD_BIND);
     }
 
-    public long getFluentdChunkSizeLimit() {
-        return this.getLong(FLUENTD_CHUNK_SIZE_LIMIT);
-    }
-
-    public int getFluentdWorkerPoolSize() {
-        return this.getInt(FLUENTD_WORKER_POOL_SIZE);
-    }
-
     public SocketAddress getLocalAddress() throws FluentdConnectorConfigError {
         try {
             return new InetSocketAddress(InetAddress.getByName(getFluentdBind()), getFluentdPort());
