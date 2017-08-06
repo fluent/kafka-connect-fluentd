@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Map;
 
 
@@ -44,13 +45,12 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     public static final String FLUENTD_KEEP_ALIVE_ENABLED = "fluentd.keep.alive.enabled";
     public static final String FLUENTD_TCP_NO_DELAY_ENABLED = "fluentd.tcp.no.delay.enabled";
     public static final String FLUENTD_WORKER_POOL_SIZE = "fluentd.worker.pool.size";
-    public static final String FLUENTD_PROTOCOL = "fluentd.protocol";
-    public static final String FLUENTD_TLS_VERSION = "fluentd.tls.version";
+    public static final String FLUENTD_TRANSPORT = "fluentd.transport";
+    public static final String FLUENTD_TLS_VERSIONS = "fluentd.tls.versions";
+    public static final String FLUENTD_TLS_CIPHERS = "fluentd.tls.ciphers";
     public static final String FLUENTD_KEYSTORE_PATH = "fluentd.keystore.path";
     public static final String FLUENTD_KEYSTORE_PASSWORD = "fluentd.keystore.password";
     public static final String FLUENTD_KEY_PASSWORD = "fluentd.key.password";
-    public static final String FLUENTD_TRUSTSTORE_PATH = "fluentd.truststore.path";
-    public static final String FLUENTD_TRUSTSTORE_PASSWORD = "fluentd.truststore.password";
 
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
         super(config, parsedConfig);
@@ -68,6 +68,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                         "Bind address to listen. Default: 0.0.0.0")
                 .define(FLUENTD_CHUNK_SIZE_LIMIT, Type.LONG, Long.MAX_VALUE, Importance.MEDIUM,
                         "Allowable chunk size. Default: Long.MAX_VALUE")
+                .define(FLUENTD_BACKLOG, Type.INT, 0, Importance.MEDIUM,
+                        "The maximum number of pending connections for a server. Default: 0")
                 .define(FLUENTD_SEND_BUFFER_SIZE, Type.INT, 0, Importance.MEDIUM,
                         "SO_SNDBUF for forward connection. 0 means system default value. Default: 0")
                 .define(FLUENTD_RECEIVE_BUFFER_SIZE, Type.INT, 0, Importance.MEDIUM,
@@ -78,20 +80,16 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                         "If true TCP_NODELAY is enabled. Default: true")
                 .define(FLUENTD_WORKER_POOL_SIZE, Type.INT, 0, Importance.MEDIUM,
                         "Event loop pool size. 0 means auto. Default: 0")
-                .define(FLUENTD_PROTOCOL, Type.STRING, "TCP", Importance.MEDIUM,
-                        "Protocol type name. TCP or TLS. Default: TCP")
-                .define(FLUENTD_TLS_VERSION, Type.STRING, "TLS", Importance.MEDIUM,
-                        "TLS version. \"TLS\", \"TLSv1\", \"TLSv1.1\" or \"TLSv1.2\". Default: TLS")
+                .define(FLUENTD_TRANSPORT, Type.STRING, "tcp", Importance.MEDIUM, "tcp or tls")
+                .define(FLUENTD_TLS_VERSIONS, Type.LIST, "TLSv1.2", Importance.MEDIUM,
+                        "TLS version. \"TLS\", \"TLSv1\", \"TLSv1.1\" or \"TLSv1.2\". Default: TLSv1.2")
+                .define(FLUENTD_TLS_CIPHERS, Type.LIST, null, Importance.MEDIUM, "Cipher suites")
                 .define(FLUENTD_KEYSTORE_PATH, Type.STRING, null, Importance.MEDIUM,
                         "Path to keystore")
                 .define(FLUENTD_KEYSTORE_PASSWORD, Type.STRING, null, Importance.MEDIUM,
                         "Password for keystore")
                 .define(FLUENTD_KEY_PASSWORD, Type.STRING, null, Importance.MEDIUM,
-                        "Password for key")
-                .define(FLUENTD_TRUSTSTORE_PATH, Type.STRING, null, Importance.MEDIUM,
-                        "Path to truststore")
-                .define(FLUENTD_TRUSTSTORE_PASSWORD, Type.STRING, null, Importance.MEDIUM,
-                        "Password for truststore");
+                        "Password for key");
     }
 
     public int getFluentdPort() {
@@ -138,12 +136,12 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
         return getInt(FLUENTD_WORKER_POOL_SIZE);
     }
 
-    public String getFluentdProtocol() {
-        return getString(FLUENTD_PROTOCOL);
+    public String getFluentdTransport() {
+        return getString(FLUENTD_TRANSPORT);
     }
 
-    public String getFluentdTlsVersion() {
-        return getString(FLUENTD_TLS_VERSION);
+    public List<String> getFluentdTlsVersions() {
+        return getList(FLUENTD_TLS_VERSIONS);
     }
 
     public String getFluentdKeystorePath() {
@@ -156,13 +154,5 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public String getFluentdKeyPassword() {
         return getString(FLUENTD_KEY_PASSWORD);
-    }
-
-    public String getFluentdTruststorePath() {
-        return getString(FLUENTD_TRUSTSTORE_PATH);
-    }
-
-    public String getFluentdTruststorePassword() {
-        return getString(FLUENTD_TRUSTSTORE_PASSWORD);
     }
 }

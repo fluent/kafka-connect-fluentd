@@ -49,26 +49,35 @@ public class FluentdSourceTask extends SourceTask {
             return CompletableFuture.completedFuture(null);
         });
         try {
-            server = new ForwardServer
+            if (!config.getFluentdTransport().equals("tcp") &&
+                !config.getFluentdTransport().equals("tls")) {
+                String message = FluentdSourceConnectorConfig.FLUENTD_TRANSPORT +
+                    " must be \"tcp\" or \"tls\"";
+                throw new FluentdConnectorConfigError(message);
+            }
+            ForwardServer.Builder builder = new ForwardServer
                     .Builder(callback)
                     .localAddress(config.getLocalAddress())
                     .chunkSizeLimit(config.getFluentdChunkSizeLimit())
                     .backlog(config.getFluentdBacklog())
-                    .sendBufferSize(config.getFluentdSendBufferSize())
-                    .receiveBufferSize(config.getFluentdReceveBufferSize())
                     .keepAliveEnabled(config.getFluentdKeepAliveEnabled())
                     .tcpNoDelayEnabled(config.getFluentdTcpNoDeleyEnabled())
-                    .workerPoolSize(config.getFluentdWorkerPoolSize())
-                    /*
-                    .protocol(config.getFluentdProtocol())
-                    .tlsVersion(config.getFluentdTlsVersion())
+                    .sslEnabled(config.getFluentdTransport().equals("tls"))
+                    .tlsVersions(config.getFluentdTlsVersions().toArray(new String[0]))
                     .keystorePath(config.getFluentdKeystorePath())
-                    .keyystorePassword(config.getFluentdKeystorePassword())
-                    .keyPassword(config.getFluentdKeyPassword())
-                    .trustStorePath(config.getFluentdTruststorePath())
-                    .trustStorePassword(config.getFluentdTruststorePassword())
-                    */
-                    .build();
+                    .keystorePassword(config.getFluentdKeystorePassword())
+                    .keyPassword(config.getFluentdKeyPassword());
+            if (config.getFluentdSendBufferSize() != 0) {
+                builder.sendBufferSize(config.getFluentdSendBufferSize());
+            }
+            if (config.getFluentdReceveBufferSize() != 0) {
+                builder.receiveBufferSize(config.getFluentdReceveBufferSize());
+            }
+            if (config.getFluentdWorkerPoolSize() != 0) {
+                builder.workerPoolSize(config.getFluentdWorkerPoolSize());
+            }
+
+            server = builder.build();
         } catch (FluentdConnectorConfigError ex) {
             throw new ConnectException(ex);
         }
