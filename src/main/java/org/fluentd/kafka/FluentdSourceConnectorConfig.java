@@ -15,27 +15,6 @@ import java.util.Map;
 
 public class FluentdSourceConnectorConfig extends AbstractConfig {
 
-    /*
-     * in_forward configs
-     *   port
-     *   bind
-     *   linger_timeout
-     *   check_size_limit
-     *   chunk_size_warn_limit
-     *   skip_invalid_event
-     *   source_hostname_key
-     *   log_level
-     */
-    /*
-     * influent config
-     *   localAddress
-     *   chunkSizeLimit
-     *   sendBufferSize
-     *   receiveBufferSize
-     *   keepAliveEnabled
-     *   tcpNoDelayEnabled
-     *   workerPoolSize
-     */
     public static final String FLUENTD_PORT = "fluentd.port";
     public static final String FLUENTD_BIND = "fluentd.bind";
     public static final String FLUENTD_CHUNK_SIZE_LIMIT = "fluentd.chunk.size.limit";
