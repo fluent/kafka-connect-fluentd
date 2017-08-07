@@ -49,3 +49,40 @@ $ echo '{"messmages": "Hi, Kafka connect!"}' | fluent-cat connect-test --time-as
 
 Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
 
+### Configuration for FluentdSourceConnector
+
+* fluentd.port
+  * Port number to listen. Default: `24224`
+* fluentd.bind
+  * Bind address to listen. Default: `0.0.0.0`
+* fluentd.chunk.size.limit
+  * Allowable chunk size. Default: `Long.MAX_VALUE`
+* fluentd.backlog
+  * The maximum number of pending connections for a server. Default: `0`
+* fluentd.send.buffer.size
+  * `SO_SNDBUF` for forward connection. 0 means system default value. Default: `0`
+* fluentd.receve.buffer.size
+  * `SO_RCVBUF` for forward connection. 0 means system default value. Default: `0`
+* fluentd.keep.alive.enabled
+  * If `true`, `SO_KEEPALIVE` is enabled. Default: `true`
+* fluentd.tcp.no.delay.enabled
+  * If `true`, `TCP_NODELAY` is enabled. Default: `true`
+* fluentd.worker.pool.size
+  * Event loop pool size. `0` means auto. Default: `0`
+* fluentd.transport
+  * Set Fluentd transport protocol to `tcp` or `tls`. Default: `tcp`
+* fluentd.tls.versions
+  * TLS version. \"TLS\", \"TLSv1\", \"TLSv1.1\" or \"TLSv1.2\". Default: TLSv1.2
+* fluentd.tls.ciphers
+  * Cipher suites
+* fluentd.keystore.path
+  * Path to keystore
+* fluentd.keystore.password
+  * Password for keystore
+* fluentd.key.password
+  * Password for key
+
+### Configuration for FluentdSinkConnector
+
+TODO
+
