@@ -88,3 +88,63 @@ Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkC
 
 TODO
 
+### Example of SSL/TLS support with Fluentd
+
+FluentdSourceConnector.properties
+
+```
+name=FluentdSourceConnector
+tasks.max=1
+connector.class=org.fluentd.kafka.FluentdSourceConnector
+fluentd.port=24224
+fluentd.bind=0.0.0.0
+fluentd.transport=tls
+fluentd.keystore.path=/path/to/influent-server.jks
+fluentd.keystore.password=password-for-keystore
+fluentd.key.password=password-for-key
+```
+
+fluent.conf
+
+```aconf
+<source>
+  @type dummy
+  dummy {"message": "this is test"}
+  tag test
+</source>
+
+<filter test>
+  @type stdout
+</filter>
+<match test>
+  @type forward
+  transport tls
+  tls_cert_path /path/to/ca_cert.pem
+  # tls_verify_hostname false # for test
+  heartbeat_type none
+  <server>
+    # first server
+    host 127.0.0.1
+    port 24224
+  </server>
+  <buffer>
+    flush_interval 1
+  </buffer>
+</match>
+```
+
+Run kafka-connect-fluentd and then run Fluentd with above configuration:
+
+```text
+(on terminal 1)
+$ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+(on terminal 2)
+$ ./bin/kafka-server-start.sh config/server.properties
+(on terminal 3)
+$ bin/connect-standalone.sh config/connect-standalone.properties \
+    /path/to/kafka-connect-fluentd/config/FluentdSourceConnector.properties \
+    /path/to/connect-file-sink.properties
+(on terminal 4)
+$ fluentd -c fluent.conf
+```
+
