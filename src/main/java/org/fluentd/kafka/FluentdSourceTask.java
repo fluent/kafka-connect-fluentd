@@ -31,12 +31,16 @@ public class FluentdSourceTask extends SourceTask {
         config = new FluentdSourceConnectorConfig(properties);
         ForwardCallback callback = ForwardCallback.of(stream -> {
             stream.getEntries().forEach(entry -> {
+                String topic = config.getFluentdStaticTopic();
+                if (topic == null) {
+                    topic = stream.getTag().getName();
+                }
                 // TODO support timestamp
                 // Long timestamp = entry.getTime().toEpochMilli();
                 SourceRecord sourceRecord = new SourceRecord(
                         null,
                         null,
-                        stream.getTag().getName(),
+                        topic,
                         null,
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
