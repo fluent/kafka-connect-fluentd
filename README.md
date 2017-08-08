@@ -72,7 +72,7 @@ Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkC
 * fluentd.transport
   * Set Fluentd transport protocol to `tcp` or `tls`. Default: `tcp`
 * fluentd.tls.versions
-  * TLS version. \"TLS\", \"TLSv1\", \"TLSv1.1\" or \"TLSv1.2\". Default: TLSv1.2
+  * TLS version. "TLS", "TLSv1", "TLSv1.1" or "TLSv1.2". Default: `TLSv1.2`
 * fluentd.tls.ciphers
   * Cipher suites
 * fluentd.keystore.path
