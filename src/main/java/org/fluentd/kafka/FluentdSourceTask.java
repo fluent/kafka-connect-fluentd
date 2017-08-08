@@ -14,12 +14,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class FluentdSourceTask extends SourceTask {
     static final Logger log = LoggerFactory.getLogger(FluentdSourceTask.class);
     private FluentdSourceConnectorConfig config;
     private ForwardServer server;
     private final ConcurrentLinkedDeque<SourceRecord> queue = new ConcurrentLinkedDeque<>();
+
+    private static final class Reporter implements Runnable {
+        private final AtomicLong counter = new AtomicLong();
+
+        void add(final int up) {
+            counter.addAndGet(up);
+        }
+
+        @Override
+        public void run() {
+            long lastChecked = System.currentTimeMillis();
+            while (true) {
+                try {
+                    Thread.sleep(100);
+                } catch (final InterruptedException e) {
+                    break;
+                }
+                final long now = System.currentTimeMillis();
+                if (now - lastChecked >= 1000) {
+                    lastChecked = now;
+                    final long current = counter.getAndSet(0);
+                    log.info("{} requests/sec", current);
+                }
+            }
+        }
+    }
+
+    private final static Reporter reporter = new Reporter();
 
     @Override
     public String version() {
@@ -30,6 +59,9 @@ public class FluentdSourceTask extends SourceTask {
     public void start(Map<String, String> properties) {
         config = new FluentdSourceConnectorConfig(properties);
         ForwardCallback callback = ForwardCallback.of(stream -> {
+            if (config.getFluentdCounterEnabled()) {
+                reporter.add(stream.getEntries().size());
+            }
             stream.getEntries().forEach(entry -> {
                 String topic = config.getFluentdStaticTopic();
                 if (topic == null) {
@@ -86,6 +118,9 @@ public class FluentdSourceTask extends SourceTask {
             throw new ConnectException(ex);
         }
         server.start();
+        if (config.getFluentdCounterEnabled()) {
+            new Thread(reporter).start();
+        }
     }
 
     @Override
