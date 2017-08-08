@@ -81,6 +81,8 @@ Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkC
   * Password for keystore
 * fluentd.key.password
   * Password for key
+* fluentd.static.topic
+  * Static topic for Kafka. `null` means using Fluentd's tag for topic dynamically. Default: `null`
 
 ### Configuration for FluentdSinkConnector
 

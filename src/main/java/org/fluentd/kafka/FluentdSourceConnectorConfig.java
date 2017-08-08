@@ -31,6 +31,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     public static final String FLUENTD_KEYSTORE_PASSWORD = "fluentd.keystore.password";
     public static final String FLUENTD_KEY_PASSWORD = "fluentd.key.password";
 
+    public static final String FLUENTD_STATIC_TOPIC = "fluentd.static.topic";
+
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
         super(config, parsedConfig);
     }
@@ -68,7 +70,9 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                 .define(FLUENTD_KEYSTORE_PASSWORD, Type.STRING, null, Importance.MEDIUM,
                         "Password for keystore")
                 .define(FLUENTD_KEY_PASSWORD, Type.STRING, null, Importance.MEDIUM,
-                        "Password for key");
+                        "Password for key")
+                .define(FLUENTD_STATIC_TOPIC, Type.STRING, null, Importance.MEDIUM,
+                        "Static topic for Kafka. null means using Fluentd's tag for topic dynamically. Default: null");
     }
 
     public int getFluentdPort() {
@@ -133,5 +137,9 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public String getFluentdKeyPassword() {
         return getString(FLUENTD_KEY_PASSWORD);
+    }
+
+    public String getFluentdStaticTopic() {
+        return getString(FLUENTD_STATIC_TOPIC);
     }
 }
