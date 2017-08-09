@@ -33,7 +33,7 @@ $ bin/connect-standalone.sh config/connect-standalone.properties \
     /path/to/kafka-connect-fluentd/config/FluentdSinkConnector.properties
 ```
 
-**:NOTE:**
+**NOTE:**
 
 Copy jar file to `CLASSPATH` or change `plugin.path` in connect-standalone.properties.
 Use same `topics` in FluentdSourceConnector.properties and connect-file-sink.properties.
