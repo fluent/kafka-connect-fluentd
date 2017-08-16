@@ -88,7 +88,30 @@ Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkC
 
 ### Configuration for FluentdSinkConnector
 
-TODO
+See also [Fluency](https://github.com/komamitsu/fluency).
+
+* fluentd.connect
+  * Connection specs for Fluentd. Default: localhost:24224
+* fluentd.client.max.buffer.size
+  * Max buffer size.
+* fluentd.client.buffer.chunk.initial.size
+  * Initial size of buffer chunk. Default: 1048576 (1MiB)
+* fluentd.client.buffer.chunk.retention.size
+  * Retention size of buffer chunk. Default: 4194304 (4MiB)
+* fluentd.client.flush.interval
+  * Buffer flush interval in msec. Default: 600msec
+* fluentd.client.ack.response.mode
+  * Enable/Disable ack response mode. Default: false
+* fluentd.client.file.backup.dir
+  * Enable/Disable file backup mode. Default: false
+* fluentd.client.wait.until.buffer.flushed
+  * Max wait until all buffers are flushed in sec. Default: 60sec
+* fluentd.client.wait.until.flusher.terminated
+  * Max wait until the flusher is terminated in sec. Default: 60sec
+* fluentd.client.jvm.heap.buffer.mode
+  * If true use JVM heap memory for buffer pool. Default: false
+
+NOTE: Fluency doesn't support SSL/TLS yet
 
 ### Example of SSL/TLS support with Fluentd
 
