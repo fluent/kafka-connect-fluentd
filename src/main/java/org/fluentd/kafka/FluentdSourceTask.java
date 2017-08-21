@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FluentdSourceTask extends SourceTask {
@@ -131,6 +132,11 @@ public class FluentdSourceTask extends SourceTask {
             log.debug("{}", record);
             if (record != null) {
                 records.add(record);
+            }
+        }
+        if (records.isEmpty()) {
+            synchronized (this) {
+                this.wait(1000);
             }
         }
         return records;
