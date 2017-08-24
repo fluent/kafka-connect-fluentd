@@ -22,10 +22,22 @@ public class FluentdSourceConnectorTest {
     }
 
     @Test
-    public void test() {
+    public void testSingleTask() {
         PowerMock.replayAll();
         connector.start(buildSourceProperties());
         List<Map<String, String>> taskConfigs = connector.taskConfigs(1);
+        Assert.assertEquals(1, taskConfigs.size());
+        Assert.assertEquals("24225", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_PORT));
+        Assert.assertEquals("127.0.0.1", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_BIND));
+        PowerMock.verifyAll();
+    }
+
+    @Test
+    public void testTaskConfigs() {
+        PowerMock.replayAll();
+        connector.start(buildSourceProperties());
+        List<Map<String, String>> taskConfigs = connector.taskConfigs(10);
+        Assert.assertEquals(1, taskConfigs.size());
         Assert.assertEquals("24225", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_PORT));
         Assert.assertEquals("127.0.0.1", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_BIND));
         PowerMock.verifyAll();
