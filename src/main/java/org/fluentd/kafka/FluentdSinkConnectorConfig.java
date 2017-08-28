@@ -38,23 +38,23 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
         return new ConfigDef()
                 .define(FLUENTD_CONNECT, Type.STRING, "localhost:24224", Importance.HIGH,
                         "Connection specs for Fluentd")
-                .define(FLUENTD_CLIENT_MAX_BUFFER_SIZE, Type.LONG, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_MAX_BUFFER_SIZE, Type.LONG, null, Importance.MEDIUM,
                         "Max buffer size.")
-                .define(FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE, Type.INT, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE, Type.INT, null, Importance.MEDIUM,
                         "Initial size of buffer chunk. Default: 1048576 (1MiB)")
-                .define(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE, Type.INT, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE, Type.INT, null, Importance.MEDIUM,
                         "Retention size of buffer chunk. Default: 4194304 (4MiB)")
-                .define(FLUENTD_CLIENT_FLUSH_INTERVAL, Type.INT, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_FLUSH_INTERVAL, Type.INT, null, Importance.MEDIUM,
                         "Buffer flush interval in msec. Default: 600msec")
-                .define(FLUENTD_CLIENT_ACK_RESPONSE_MODE, Type.BOOLEAN, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_ACK_RESPONSE_MODE, Type.BOOLEAN, false, Importance.MEDIUM,
                         "Enable/Disable ack response mode. Default: false")
-                .define(FLUENTD_CLIENT_FILE_BACKUP_DIR, Type.STRING, Importance.MEDIUM,
-                        "Enable/Disable file backup mode. Default: false")
-                .define(FLUENTD_CLIENT_WAIT_UNTIL_BUFFER_FLUSHED, Type.INT, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_FILE_BACKUP_DIR, Type.STRING, null, Importance.MEDIUM,
+                        "Enable/Disable file backup mode. Default: disabled")
+                .define(FLUENTD_CLIENT_WAIT_UNTIL_BUFFER_FLUSHED, Type.INT, null, Importance.MEDIUM,
                         "Max wait until all buffers are flushed in sec. Default: 60sec")
-                .define(FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED, Type.INT, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED, Type.INT, null, Importance.MEDIUM,
                         "Max wait until the flusher is terminated in sec. Default: 60sec")
-                .define(FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE, Type.BOOLEAN, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE, Type.BOOLEAN, false, Importance.MEDIUM,
                         "If true use JVM heap memory for buffer pool. Default: false");
     }
 
