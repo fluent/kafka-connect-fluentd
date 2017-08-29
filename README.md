@@ -5,7 +5,7 @@
 Build jar:
 
 ```
-$ ./gradlew shadowJar
+$ ./gradlew jar
 ```
 
 Set up Apache Kafka.
