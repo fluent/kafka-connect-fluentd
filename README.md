@@ -36,7 +36,7 @@ $ bin/connect-standalone.sh config/connect-standalone.properties \
 **NOTE:**
 
 Copy jar file to `CLASSPATH` or change `plugin.path` in connect-standalone.properties.
-Use same `topics` in FluentdSourceConnector.properties and connect-file-sink.properties.
+Use same `topics` in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
 
 And emit records:
 
