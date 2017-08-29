@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class FluentdSinkTask extends SinkTask {
-    private static Logger log = LoggerFactory.getLogger(FluentdSinkTask.class);
+    private static final Logger log = LoggerFactory.getLogger(FluentdSinkTask.class);
     private Fluency fluency;
     private SinkRecordConverter converter;
 
