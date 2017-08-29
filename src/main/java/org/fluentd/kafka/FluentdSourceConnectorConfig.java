@@ -19,8 +19,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     public static final String FLUENTD_BIND = "fluentd.bind";
     public static final String FLUENTD_CHUNK_SIZE_LIMIT = "fluentd.chunk.size.limit";
     public static final String FLUENTD_BACKLOG = "fluentd.backlog";
-    public static final String FLUENTD_SEND_BUFFER_SIZE = "fluentd.send.buffer.size";
-    public static final String FLUENTD_RECEIVE_BUFFER_SIZE = "fluentd.receve.buffer.size";
+    public static final String FLUENTD_SEND_BUFFER_BYTES = "fluentd.send.buffer.bytes";
+    public static final String FLUENTD_RECEVE_BUFFER_BYTES = "fluentd.receve.buffer.bytes";
     public static final String FLUENTD_KEEP_ALIVE_ENABLED = "fluentd.keep.alive.enabled";
     public static final String FLUENTD_TCP_NO_DELAY_ENABLED = "fluentd.tcp.no.delay.enabled";
     public static final String FLUENTD_WORKER_POOL_SIZE = "fluentd.worker.pool.size";
@@ -52,9 +52,9 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                         "Allowable chunk size. Default: Long.MAX_VALUE")
                 .define(FLUENTD_BACKLOG, Type.INT, 0, Importance.MEDIUM,
                         "The maximum number of pending connections for a server. Default: 0")
-                .define(FLUENTD_SEND_BUFFER_SIZE, Type.INT, 0, Importance.MEDIUM,
+                .define(FLUENTD_SEND_BUFFER_BYTES, Type.INT, 0, Importance.MEDIUM,
                         "SO_SNDBUF for forward connection. 0 means system default value. Default: 0")
-                .define(FLUENTD_RECEIVE_BUFFER_SIZE, Type.INT, 0, Importance.MEDIUM,
+                .define(FLUENTD_RECEVE_BUFFER_BYTES, Type.INT, 0, Importance.MEDIUM,
                         "SO_RCVBUF for forward connection. 0 means system default value. Default: 0")
                 .define(FLUENTD_KEEP_ALIVE_ENABLED, Type.BOOLEAN, true, Importance.MEDIUM,
                         "If true SO_KEEPALIVE is enabled. Default: true")
@@ -103,11 +103,11 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     }
 
     public int getFluentdSendBufferSize() {
-        return getInt(FLUENTD_SEND_BUFFER_SIZE);
+        return getInt(FLUENTD_SEND_BUFFER_BYTES);
     }
 
     public int getFluentdReceveBufferSize() {
-        return getInt(FLUENTD_RECEIVE_BUFFER_SIZE);
+        return getInt(FLUENTD_RECEVE_BUFFER_BYTES);
     }
 
     public boolean getFluentdKeepAliveEnabled() {
