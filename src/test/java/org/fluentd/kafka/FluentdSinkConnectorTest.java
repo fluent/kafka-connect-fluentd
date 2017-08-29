@@ -26,9 +26,9 @@ public class FluentdSinkConnectorTest {
         connector.start(buildSinkProperties());
         List<Map<String, String>> taskConfigs = connector.taskConfigs(1);
         Assert.assertEquals("localhost:24225", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CONNECT));
-        Assert.assertEquals("100", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_MAX_BUFFER_SIZE));
-        Assert.assertEquals("10", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE));
-        Assert.assertEquals("10", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE));
+        Assert.assertEquals("100", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_MAX_BUFFER_BYTES));
+        Assert.assertEquals("10", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_BYTES));
+        Assert.assertEquals("10", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_BYTES));
         Assert.assertEquals("500", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_FLUSH_INTERVAL));
         Assert.assertEquals("true", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_ACK_RESPONSE_MODE));
         Assert.assertEquals("/tmp/fluency", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_FILE_BACKUP_DIR));
@@ -41,9 +41,9 @@ public class FluentdSinkConnectorTest {
     private Map<String, String> buildSinkProperties() {
         Map<String, String> sinkProperties = new HashMap<>();
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CONNECT, "localhost:24225");
-        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_MAX_BUFFER_SIZE, "100");
-        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE, "10");
-        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE, "10");
+        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_MAX_BUFFER_BYTES, "100");
+        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_BYTES, "10");
+        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_BYTES, "10");
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_FLUSH_INTERVAL, "500");
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_ACK_RESPONSE_MODE, "true");
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_FILE_BACKUP_DIR, "/tmp/fluency");

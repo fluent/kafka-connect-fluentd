@@ -14,9 +14,9 @@ import java.util.Map;
 public class FluentdSinkConnectorConfig extends AbstractConfig {
 
     static final String FLUENTD_CONNECT = "fluentd.connect";
-    static final String FLUENTD_CLIENT_MAX_BUFFER_SIZE = "fluentd.client.max.buffer.size";
-    static final String FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE = "fluentd.client.buffer.chunk.initial.size";
-    static final String FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE = "fluentd.client.buffer.chunk.retention.size";
+    static final String FLUENTD_CLIENT_MAX_BUFFER_BYTES = "fluentd.client.max.buffer.bytes";
+    static final String FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_BYTES = "fluentd.client.buffer.chunk.initial.bytes";
+    static final String FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_BYTES = "fluentd.client.buffer.chunk.retention.bytes";
     static final String FLUENTD_CLIENT_FLUSH_INTERVAL = "fluentd.client.flush.interval";
     static final String FLUENTD_CLIENT_ACK_RESPONSE_MODE = "fluentd.client.ack.response.mode";
     static final String FLUENTD_CLIENT_FILE_BACKUP_DIR = "fluentd.client.file.backup.dir";
@@ -38,11 +38,11 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
         return new ConfigDef()
                 .define(FLUENTD_CONNECT, Type.STRING, "localhost:24224", Importance.HIGH,
                         "Connection specs for Fluentd")
-                .define(FLUENTD_CLIENT_MAX_BUFFER_SIZE, Type.LONG, null, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_MAX_BUFFER_BYTES, Type.LONG, null, Importance.MEDIUM,
                         "Max buffer size.")
-                .define(FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE, Type.INT, null, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_BYTES, Type.INT, null, Importance.MEDIUM,
                         "Initial size of buffer chunk. Default: 1048576 (1MiB)")
-                .define(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE, Type.INT, null, Importance.MEDIUM,
+                .define(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_BYTES, Type.INT, null, Importance.MEDIUM,
                         "Retention size of buffer chunk. Default: 4194304 (4MiB)")
                 .define(FLUENTD_CLIENT_FLUSH_INTERVAL, Type.INT, null, Importance.MEDIUM,
                         "Buffer flush interval in msec. Default: 600(msec)")
@@ -74,15 +74,15 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
     }
 
     public Long getFluentdClientMaxBufferSize() {
-        return getLong(FLUENTD_CLIENT_MAX_BUFFER_SIZE);
+        return getLong(FLUENTD_CLIENT_MAX_BUFFER_BYTES);
     }
 
     public Integer getFluentdClientBufferChunkInitialSize() {
-        return getInt(FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_SIZE);
+        return getInt(FLUENTD_CLIENT_BUFFER_CHUNK_INITIAL_BYTES);
     }
 
     public Integer getFluentdClientBufferChunkRetentionSize() {
-        return getInt(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE);
+        return getInt(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_BYTES);
     }
 
     public Integer getFluentdClientFlushInterval() {

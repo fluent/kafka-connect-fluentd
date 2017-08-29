@@ -45,7 +45,7 @@ public class FluentdSinkTaskTest {
         Map<String, String> sinkProperties = new HashMap<>();
         FluentdSinkTask task = new FluentdSinkTask();
         task.initialize(PowerMock.createMock(SinkTaskContext.class));
-        //sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_MAX_BUFFER_SIZE, "100000");
+        //sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_MAX_BUFFER_BYTES, "100000");
         task.start(sinkProperties);
         final String topic = "testtopic";
         final String value = "{\"message\":\"This is a test message\"}";
