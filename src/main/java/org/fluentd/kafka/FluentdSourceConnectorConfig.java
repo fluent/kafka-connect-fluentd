@@ -31,7 +31,7 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     public static final String FLUENTD_KEYSTORE_PASSWORD = "fluentd.keystore.password";
     public static final String FLUENTD_KEY_PASSWORD = "fluentd.key.password";
 
-    public static final String FLUENTD_STATIC_TOPIC = "fluentd.static.topic";
+    public static final String KAFKA_TOPIC = "kafka.topic";
     public static final String FLUENTD_COUNTER_ENABLED = "fluentd.counter.enabled";
 
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
@@ -72,8 +72,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                         "Password for keystore")
                 .define(FLUENTD_KEY_PASSWORD, Type.STRING, null, Importance.MEDIUM,
                         "Password for key")
-                .define(FLUENTD_STATIC_TOPIC, Type.STRING, null, Importance.MEDIUM,
-                        "Static topic for Kafka. null means using Fluentd's tag for topic dynamically. Default: null")
+                .define(KAFKA_TOPIC, Type.STRING, null, Importance.MEDIUM,
+                        "Topic for Kafka. null means using Fluentd's tag for topic dynamically. Default: null")
                 .define(FLUENTD_COUNTER_ENABLED, Type.BOOLEAN, false, Importance.MEDIUM,
                         "Enable counter for messages/sec. Default: false");
     }
@@ -143,7 +143,7 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     }
 
     public String getFluentdStaticTopic() {
-        return getString(FLUENTD_STATIC_TOPIC);
+        return getString(KAFKA_TOPIC);
     }
 
     public boolean getFluentdCounterEnabled() {

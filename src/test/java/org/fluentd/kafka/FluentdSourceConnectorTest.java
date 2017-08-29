@@ -42,7 +42,7 @@ public class FluentdSourceConnectorTest {
         Assert.assertEquals("/tmp/keystore.jks", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_KEYSTORE_PATH));
         Assert.assertEquals("password1", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_KEYSTORE_PASSWORD));
         Assert.assertEquals("password2", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_KEY_PASSWORD));
-        Assert.assertEquals("topic", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_STATIC_TOPIC));
+        Assert.assertEquals("topic", taskConfigs.get(0).get(FluentdSourceConnectorConfig.KAFKA_TOPIC));
         PowerMock.verifyAll();
     }
 
@@ -67,7 +67,7 @@ public class FluentdSourceConnectorTest {
         Assert.assertEquals("/tmp/keystore.jks", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_KEYSTORE_PATH));
         Assert.assertEquals("password1", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_KEYSTORE_PASSWORD));
         Assert.assertEquals("password2", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_KEY_PASSWORD));
-        Assert.assertEquals("topic", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_STATIC_TOPIC));
+        Assert.assertEquals("topic", taskConfigs.get(0).get(FluentdSourceConnectorConfig.KAFKA_TOPIC));
         PowerMock.verifyAll();
     }
 
@@ -88,7 +88,7 @@ public class FluentdSourceConnectorTest {
         sourceProperties.put(FluentdSourceConnectorConfig.FLUENTD_KEYSTORE_PATH, "/tmp/keystore.jks");
         sourceProperties.put(FluentdSourceConnectorConfig.FLUENTD_KEYSTORE_PASSWORD, "password1");
         sourceProperties.put(FluentdSourceConnectorConfig.FLUENTD_KEY_PASSWORD, "password2");
-        sourceProperties.put(FluentdSourceConnectorConfig.FLUENTD_STATIC_TOPIC, "topic");
+        sourceProperties.put(FluentdSourceConnectorConfig.KAFKA_TOPIC, "topic");
         return sourceProperties;
     }
 }
