@@ -45,15 +45,15 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
                 .define(FLUENTD_CLIENT_BUFFER_CHUNK_RETENTION_SIZE, Type.INT, null, Importance.MEDIUM,
                         "Retention size of buffer chunk. Default: 4194304 (4MiB)")
                 .define(FLUENTD_CLIENT_FLUSH_INTERVAL, Type.INT, null, Importance.MEDIUM,
-                        "Buffer flush interval in msec. Default: 600msec")
+                        "Buffer flush interval in msec. Default: 600(msec)")
                 .define(FLUENTD_CLIENT_ACK_RESPONSE_MODE, Type.BOOLEAN, false, Importance.MEDIUM,
                         "Enable/Disable ack response mode. Default: false")
                 .define(FLUENTD_CLIENT_FILE_BACKUP_DIR, Type.STRING, null, Importance.MEDIUM,
                         "Enable/Disable file backup mode. Default: disabled")
                 .define(FLUENTD_CLIENT_WAIT_UNTIL_BUFFER_FLUSHED, Type.INT, null, Importance.MEDIUM,
-                        "Max wait until all buffers are flushed in sec. Default: 60sec")
+                        "Max wait until all buffers are flushed in sec. Default: 60(sec)")
                 .define(FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED, Type.INT, null, Importance.MEDIUM,
-                        "Max wait until the flusher is terminated in sec. Default: 60sec")
+                        "Max wait until the flusher is terminated in sec. Default: 60(sec)")
                 .define(FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE, Type.BOOLEAN, false, Importance.MEDIUM,
                         "If true use JVM heap memory for buffer pool. Default: false");
     }
