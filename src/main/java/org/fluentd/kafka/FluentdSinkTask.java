@@ -15,8 +15,8 @@ import java.util.Map;
 
 public class FluentdSinkTask extends SinkTask {
     private static Logger log = LoggerFactory.getLogger(FluentdSinkTask.class);
-    private static Fluency fluency;
-    private static SinkRecordConverter converter;
+    private Fluency fluency;
+    private SinkRecordConverter converter;
 
     @Override
     public String version() {
