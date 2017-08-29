@@ -49,7 +49,7 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
                 .define(FLUENTD_CLIENT_ACK_RESPONSE_MODE, Type.BOOLEAN, false, Importance.MEDIUM,
                         "Enable/Disable ack response mode. Default: false")
                 .define(FLUENTD_CLIENT_FILE_BACKUP_DIR, Type.STRING, null, Importance.MEDIUM,
-                        "Enable/Disable file backup mode. Default: disabled")
+                        "Enable file backup mode if specify backup directory path. Default: null")
                 .define(FLUENTD_CLIENT_WAIT_UNTIL_BUFFER_FLUSHED, Type.INT, null, Importance.MEDIUM,
                         "Max wait until all buffers are flushed in sec. Default: 60(sec)")
                 .define(FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED, Type.INT, null, Importance.MEDIUM,
