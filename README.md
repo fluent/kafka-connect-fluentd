@@ -59,9 +59,9 @@ Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkC
   * Allowable chunk size. Default: `Long.MAX_VALUE`
 * fluentd.backlog
   * The maximum number of pending connections for a server. Default: `0`
-* fluentd.send.buffer.size
+* fluentd.send.buffer.bytes
   * `SO_SNDBUF` for forward connection. `0` means system default value. Default: `0`
-* fluentd.receve.buffer.size
+* fluentd.receve.buffer.bytes
   * `SO_RCVBUF` for forward connection. `0` means system default value. Default: `0`
 * fluentd.keep.alive.enabled
   * If `true`, `SO_KEEPALIVE` is enabled. Default: `true`
@@ -81,8 +81,8 @@ Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkC
   * Password for keystore
 * fluentd.key.password
   * Password for key
-* fluentd.static.topic
-  * Static topic for Kafka. `null` means using Fluentd's tag for topic dynamically. Default: `null`
+* kafka.topic
+  * Topic for Kafka. `null` means using Fluentd's tag for topic dynamically. Default: `null`
 * fluentd.counter.enabled
   * **For developer only** Enable counter for messages/sec. Default: `false`
 
@@ -92,22 +92,22 @@ See also [Fluency](https://github.com/komamitsu/fluency).
 
 * fluentd.connect
   * Connection specs for Fluentd. Default: localhost:24224
-* fluentd.client.max.buffer.size
+* fluentd.client.max.buffer.bytes
   * Max buffer size.
-* fluentd.client.buffer.chunk.initial.size
+* fluentd.client.buffer.chunk.initial.bytes
   * Initial size of buffer chunk. Default: 1048576 (1MiB)
-* fluentd.client.buffer.chunk.retention.size
+* fluentd.client.buffer.chunk.retention.bytes
   * Retention size of buffer chunk. Default: 4194304 (4MiB)
 * fluentd.client.flush.interval
-  * Buffer flush interval in msec. Default: 600msec
+  * Buffer flush interval in msec. Default: 600(msec)
 * fluentd.client.ack.response.mode
   * Enable/Disable ack response mode. Default: false
 * fluentd.client.file.backup.dir
   * Enable/Disable file backup mode. Default: false
 * fluentd.client.wait.until.buffer.flushed
-  * Max wait until all buffers are flushed in sec. Default: 60sec
+  * Max wait until all buffers are flushed in sec. Default: 60(sec)
 * fluentd.client.wait.until.flusher.terminated
-  * Max wait until the flusher is terminated in sec. Default: 60sec
+  * Max wait until the flusher is terminated in sec. Default: 60(sec)
 * fluentd.client.jvm.heap.buffer.mode
   * If true use JVM heap memory for buffer pool. Default: false
 
