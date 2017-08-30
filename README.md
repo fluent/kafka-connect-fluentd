@@ -33,21 +33,71 @@ $ bin/connect-standalone.sh config/connect-standalone.properties \
     /path/to/kafka-connect-fluentd/config/FluentdSinkConnector.properties
 ```
 
-**NOTE:**
-
-Copy jar file to `CLASSPATH` or change `plugin.path` in connect-standalone.properties.
+**NOTE:** Copy jar file to `CLASSPATH` or change `plugin.path` in connect-standalone.properties.
 Use same `topics` in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
+
+FluentdSourceConnector.properties:
+
+```
+name=FluentdSourceConnector
+tasks.max=1
+connector.class=org.fluentd.kafka.FluentdSourceConnector
+fluentd.port=24224
+fluentd.bind=0.0.0.0
+
+fluentd.worker.pool.size=1
+fluentd.counter.enabled=true
+```
+
+FluentdSinkConnector.properties:
+
+```
+name=FluentdSinkConnector
+topics=fluentd-test
+tasks.max=1
+connector.class=org.fluentd.kafka.FluentdSinkConnector
+fluentd.connect=localhost:24225
+```
+
+Setup Fluentd:
+
+```
+(on terminal 4)
+$ git clone https://github.com/fluent/fluentd.git
+$ cd fluentd
+$ bundle install
+```
+
+Run Fluentd:
+
+```
+(on terminal 4)
+$ bundle exec fluentd -c fluent.conf
+```
+
+fluent.conf:
+
+```aconf
+<source>
+  @type forward
+  port 24225
+</source>
+<match fluentd-test>
+  @type stdout
+</match>
+```
 
 And emit records:
 
 ```
-(on terminal 4)
-$ echo '{"messmages": "Hi, Kafka connect!"}' | fluent-cat fluentd-test --time-as-integer
+(on terminal 5)
+$ cd fluentd
+$ echo '{"messmages": "Hi, Kafka connect!"}' | bundle exec fluent-cat fluentd-test --time-as-integer
 ```
 
-**NOTE:**
+**NOTE:** Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
 
-Specify tag same as topics in FluentdSourceConnector.properties and FluentdSinkConnector.properties.
+See also [kafka-connect benchmark scripts](https://github.com/fluent/fluentd-benchmark/tree/master/kafka-connect).
 
 ### Configuration for FluentdSourceConnector
 
