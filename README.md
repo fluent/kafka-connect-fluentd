@@ -42,7 +42,7 @@ And emit records:
 
 ```
 (on terminal 4)
-$ echo '{"messmages": "Hi, Kafka connect!"}' | fluent-cat connect-test --time-as-integer
+$ echo '{"messmages": "Hi, Kafka connect!"}' | fluent-cat fluentd-test --time-as-integer
 ```
 
 **NOTE:**
