@@ -32,7 +32,7 @@ public class FluentdEventRecord {
         this.data = data;
     }
 
-    public FluentdEventRecord(String tag, long timestamp, Map<String, Object> data) {
+    public FluentdEventRecord(String tag, Long timestamp, Map<String, Object> data) {
         this.tag = tag;
         this.timestamp = timestamp;
         this.data = data;
