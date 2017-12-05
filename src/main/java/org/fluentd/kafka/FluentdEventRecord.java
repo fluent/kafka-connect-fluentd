@@ -64,6 +64,14 @@ public class FluentdEventRecord {
         this.tag = tag;
     }
 
+    public void setEventTime(EventTime eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public String toString() {
         return "FluentdEventRecord{tag=" + getTag() + " eventTime=" + getEventTime() + " data=" + getData() + "}";
     }
