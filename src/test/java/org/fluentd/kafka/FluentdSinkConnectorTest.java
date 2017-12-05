@@ -51,6 +51,7 @@ public class FluentdSinkConnectorTest {
         Assert.assertEquals("120", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_WAIT_UNTIL_BUFFER_FLUSHED));
         Assert.assertEquals("120", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED));
         Assert.assertEquals("true", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE));
+        Assert.assertEquals("true", taskConfigs.get(0).get(FluentdSinkConnectorConfig.FLUENTD_CLIENT_TIMESTAMP_INTEGER));
         PowerMock.verifyAll();
     }
 
@@ -66,6 +67,7 @@ public class FluentdSinkConnectorTest {
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_WAIT_UNTIL_BUFFER_FLUSHED, "120");
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED, "120");
         sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE, "true");
+        sinkProperties.put(FluentdSinkConnectorConfig.FLUENTD_CLIENT_TIMESTAMP_INTEGER, "true");
         return sinkProperties;
     }
 }
