@@ -19,6 +19,7 @@ package org.fluentd.kafka;
 import influent.EventEntry;
 import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
+import org.apache.kafka.common.record.TimestampType;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTaskContext;
@@ -65,7 +66,17 @@ public class FluentdSinkTaskTest {
         task.start(sinkProperties);
         final String topic = "testtopic";
         final String value = "{\"message\":\"This is a test message\"}";
-        SinkRecord sinkRecord = new SinkRecord(topic, 1, Schema.STRING_SCHEMA, topic, null, value, 0);
+        SinkRecord sinkRecord = new SinkRecord(
+                topic,
+                1,
+                Schema.STRING_SCHEMA,
+                topic,
+                null,
+                value,
+                0,
+                System.currentTimeMillis(),
+                TimestampType.NO_TIMESTAMP_TYPE
+        );
         task.put(Collections.singleton(sinkRecord));
         TimeUnit.SECONDS.sleep(1);
         EventEntry eventEntry = queue.poll();
