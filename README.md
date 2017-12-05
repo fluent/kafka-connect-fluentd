@@ -160,6 +160,8 @@ See also [Fluency](https://github.com/komamitsu/fluency).
   * Max wait until the flusher is terminated in sec. Default: 60(sec)
 * fluentd.client.jvm.heap.buffer.mode
   * If true use JVM heap memory for buffer pool. Default: false
+* fluentd.client.timestamp.integer
+  * If true, use integer timestamp (unix timestamp). Default: false
 
 NOTE: Fluency doesn't support SSL/TLS yet
 
