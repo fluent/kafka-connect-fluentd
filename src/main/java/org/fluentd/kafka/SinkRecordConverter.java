@@ -20,6 +20,7 @@ import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.sink.SinkRecord;
+import org.komamitsu.fluency.EventTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +29,15 @@ import java.util.Map;
 public class SinkRecordConverter {
     private static Logger logger = LoggerFactory.getLogger(SinkRecordConverter.class);
 
+    private final FluentdSinkConnectorConfig config;
+
     private RecordConverter schemafulRecordConverter = new SchemafulRecordConverter();
     private RecordConverter schemalessRecordConverter = new SchemalessRecordConverter();
     private RecordConverter rawJsonStringRecordConverter = new RawJsonStringRecordConverter();
+
+    public SinkRecordConverter(final FluentdSinkConnectorConfig config) {
+        this.config = config;
+    }
 
     public FluentdEventRecord convert(SinkRecord sinkRecord) {
         logger.debug("SinkRecord: {}", sinkRecord);
@@ -41,6 +48,13 @@ public class SinkRecordConverter {
                     .convert(sinkRecord.valueSchema(), sinkRecord.value());
         }
         eventRecord.setTag(sinkRecord.topic());
+
+        if (config.getFluentdClientTimestampInteger()) {
+            eventRecord.setTimestamp(sinkRecord.timestamp() / 1000);
+        } else {
+            eventRecord.setEventTime(EventTime.fromEpochMilli(sinkRecord.timestamp()));
+        }
+
         return eventRecord;
     }
 

@@ -58,7 +58,7 @@ public class FluentdSinkTask extends SinkTask {
         } catch (IOException e) {
             throw new ConnectException(e);
         }
-        converter = new SinkRecordConverter();
+        converter = new SinkRecordConverter(config);
     }
 
     @Override
