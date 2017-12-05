@@ -84,8 +84,7 @@ public class FluentdSourceTask extends SourceTask {
                 if (topic == null) {
                     topic = stream.getTag().getName();
                 }
-                // TODO support timestamp
-                // Long timestamp = entry.getTime().toEpochMilli();
+                Long timestamp = entry.getTime().toEpochMilli();
                 SourceRecord sourceRecord = new SourceRecord(
                         null,
                         null,
@@ -94,7 +93,8 @@ public class FluentdSourceTask extends SourceTask {
                         Schema.STRING_SCHEMA,
                         stream.getTag().getName(),
                         null,
-                        entry.getRecord().toJson()
+                        entry.getRecord().toJson(),
+                        timestamp
                 );
                 queue.add(sourceRecord);
             });
