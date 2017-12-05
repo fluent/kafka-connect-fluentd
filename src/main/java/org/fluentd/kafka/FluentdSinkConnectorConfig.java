@@ -41,6 +41,7 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
     static final String FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE = "fluentd.client.jvm.heap.buffer.mode";
     // static final String FLUENTD_CLIENT_SENDER_ERROR_HANDLER = "fluentd.client.sender.error.handler";
     // static final String FLUENTD_CLIENT_TCP_HEART_BEAT = "fluentd.client.tcp.heart.beat";
+    static final String FLUENTD_CLIENT_TIMESTAMP_INTEGER = "fluentd.client.timestamp.integer";
 
     public FluentdSinkConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
         super(config, parsedConfig);
@@ -71,7 +72,9 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
                 .define(FLUENTD_CLIENT_WAIT_UNTIL_FLUSHER_TERMINATED, Type.INT, null, Importance.MEDIUM,
                         "Max wait until the flusher is terminated in sec. Default: 60(sec)")
                 .define(FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE, Type.BOOLEAN, false, Importance.MEDIUM,
-                        "If true use JVM heap memory for buffer pool. Default: false");
+                        "If true use JVM heap memory for buffer pool. Default: false")
+                .define(FLUENTD_CLIENT_TIMESTAMP_INTEGER, Type.BOOLEAN, false, Importance.MEDIUM,
+                        "If true use integer timestamp. Default: false");
     }
 
     public String getFluentdConnect() {
@@ -123,5 +126,9 @@ public class FluentdSinkConnectorConfig extends AbstractConfig {
 
     public boolean getFluentdClientJvmHeapBufferMode() {
         return getBoolean(FLUENTD_CLIENT_JVM_HEAP_BUFFER_MODE);
+    }
+
+    public boolean getFluentdClientTimestampInteger() {
+        return getBoolean(FLUENTD_CLIENT_TIMESTAMP_INTEGER);
     }
 }
