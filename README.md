@@ -133,6 +133,8 @@ See also [kafka-connect benchmark scripts](https://github.com/fluent/fluentd-ben
   * Password for key
 * kafka.topic
   * Topic for Kafka. `null` means using Fluentd's tag for topic dynamically. Default: `null`
+* fluentd.schemas.enable
+  * Enable schemas for messages. Default: `true`
 * fluentd.counter.enabled
   * **For developer only** Enable counter for messages/sec. Default: `false`
 
