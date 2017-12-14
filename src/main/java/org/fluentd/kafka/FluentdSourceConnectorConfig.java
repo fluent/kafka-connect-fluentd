@@ -48,6 +48,7 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
     public static final String FLUENTD_KEY_PASSWORD = "fluentd.key.password";
 
     public static final String KAFKA_TOPIC = "kafka.topic";
+    public static final String FLUENTD_SCHEMAS_ENABLE = "fluentd.schemas.enable";
     public static final String FLUENTD_COUNTER_ENABLED = "fluentd.counter.enabled";
 
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
@@ -90,6 +91,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                         "Password for key")
                 .define(KAFKA_TOPIC, Type.STRING, null, Importance.MEDIUM,
                         "Topic for Kafka. null means using Fluentd's tag for topic dynamically. Default: null")
+                .define(FLUENTD_SCHEMAS_ENABLE, Type.BOOLEAN, true, Importance.MEDIUM,
+                        "Enable schemas for messages. Default: true")
                 .define(FLUENTD_COUNTER_ENABLED, Type.BOOLEAN, false, Importance.MEDIUM,
                         "Enable counter for messages/sec. Default: false");
     }
@@ -160,6 +163,10 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public String getFluentdStaticTopic() {
         return getString(KAFKA_TOPIC);
+    }
+
+    public boolean isFluentdSchemasEnable() {
+        return getBoolean(FLUENTD_SCHEMAS_ENABLE);
     }
 
     public boolean getFluentdCounterEnabled() {
