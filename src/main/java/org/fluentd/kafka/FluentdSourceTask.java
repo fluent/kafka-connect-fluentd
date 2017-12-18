@@ -75,26 +75,23 @@ public class FluentdSourceTask extends SourceTask {
     @Override
     public void start(Map<String, String> properties) {
         config = new FluentdSourceConnectorConfig(properties);
+        MessagePackConverver converter = new MessagePackConverver(config);
         ForwardCallback callback = ForwardCallback.of(stream -> {
             if (config.getFluentdCounterEnabled()) {
                 reporter.add(stream.getEntries().size());
             }
             stream.getEntries().forEach(entry -> {
                 String topic = config.getFluentdStaticTopic();
+                String tag = stream.getTag().getName();
                 if (topic == null) {
-                    topic = stream.getTag().getName();
+                    topic = tag;
                 }
                 Long timestamp = entry.getTime().toEpochMilli();
-                SourceRecord sourceRecord = new SourceRecord(
-                        null,
-                        null,
+                SourceRecord sourceRecord = converter.convert(
                         topic,
-                        null,
-                        Schema.STRING_SCHEMA,
-                        stream.getTag().getName(),
-                        null,
-                        entry.getRecord().toJson(),
-                        timestamp
+                        tag,
+                        timestamp,
+                        entry
                 );
                 queue.add(sourceRecord);
             });

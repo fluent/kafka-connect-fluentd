@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -50,6 +52,7 @@ public class FluentdSourceTaskTest {
     @Test
     public void oneRecord() throws InterruptedException, IOException {
         Map<String, String> config = new HashMap<>();
+        config.put(FluentdSourceConnectorConfig.FLUENTD_SCHEMAS_ENABLE, "false");
         task.start(config);
         Map<String, Object> record = new HashMap<>();
         record.put("message", "This is a test message");
@@ -58,14 +61,15 @@ public class FluentdSourceTaskTest {
         List<SourceRecord> sourceRecords = task.poll();
         assertEquals(1, sourceRecords.size());
         SourceRecord sourceRecord = sourceRecords.get(0);
-        assertEquals("test", sourceRecord.key());
+        assertNull(sourceRecord.key());
         assertNull(sourceRecord.valueSchema());
-        assertEquals("{\"message\":\"This is a test message\"}", sourceRecord.value());
+        assertEquals(record, sourceRecord.value());
     }
 
     @Test
     public void oneRecordWithNullValue() throws InterruptedException, IOException {
         Map<String, String> config = new HashMap<>();
+        config.put(FluentdSourceConnectorConfig.FLUENTD_SCHEMAS_ENABLE, "false");
         task.start(config);
         Map<String, Object> record = new HashMap<>();
         record.put("message", null);
@@ -74,14 +78,15 @@ public class FluentdSourceTaskTest {
         List<SourceRecord> sourceRecords = task.poll();
         assertEquals(1, sourceRecords.size());
         SourceRecord sourceRecord = sourceRecords.get(0);
-        assertEquals("test", sourceRecord.key());
+        assertNull(sourceRecord.key());
         assertNull(sourceRecord.valueSchema());
-        assertEquals("{\"message\":null}", sourceRecord.value());
+        assertEquals(record, sourceRecord.value());
     }
 
     @Test
     public void nestedRecord() throws IOException, InterruptedException {
         Map<String, String> config = new HashMap<>();
+        config.put(FluentdSourceConnectorConfig.FLUENTD_SCHEMAS_ENABLE, "false");
         task.start(config);
         Map<String, Double> version = new HashMap<>();
         version.put("stable", 0.12);
@@ -92,15 +97,22 @@ public class FluentdSourceTaskTest {
         Map<String, Object> record = new HashMap<>();
         record.put("versions", versions);
         record.put("version", version);
+        // {"versions": ["v0.12", "v0.14"], version: {"stable": 0.12, "unstable": 0.14}}
         fluency.emit("test", record);
         Thread.sleep(1000);
         List<SourceRecord> sourceRecords = task.poll();
         assertEquals(1, sourceRecords.size());
+        SourceRecord sourceRecord = sourceRecords.get(0);
+        assertNull(sourceRecord.key());
+        Map<String, Object> value = (Map<String, Object>) sourceRecord.value();
+        assertThat((List<String>) value.get("versions"), hasItems("v0.12", "v0.14"));
+        assertEquals(value.get("version"), version);
     }
 
     @Test
     public void multipleRecords() throws InterruptedException, IOException {
         Map<String, String> config = new HashMap<>();
+        config.put(FluentdSourceConnectorConfig.FLUENTD_SCHEMAS_ENABLE, "false");
         task.start(config);
         Map<String, Object> record1 = new HashMap<>();
         record1.put("message", "This is a test message1");
@@ -112,8 +124,10 @@ public class FluentdSourceTaskTest {
         List<SourceRecord> sourceRecords = task.poll();
         assertEquals(2, sourceRecords.size());
         assertNull(sourceRecords.get(0).valueSchema());
-        assertEquals("{\"message\":\"This is a test message1\"}", sourceRecords.get(0).value());
+        Map<String, Object> value1 = (Map<String, Object>) sourceRecords.get(0).value();
+        assertEquals("This is a test message1", value1.get("message"));
         assertNull(sourceRecords.get(1).valueSchema());
-        assertEquals("{\"message\":\"This is a test message2\"}", sourceRecords.get(1).value());
+        Map<String, Object> value2 = (Map<String, Object>) sourceRecords.get(1).value();
+        assertEquals("This is a test message2", value2.get("message"));
     }
 }
