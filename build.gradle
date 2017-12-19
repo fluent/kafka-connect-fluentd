@@ -1,7 +1,8 @@
 plugins {
-  id "java"
-  id "maven"
-  id "com.github.johnrengelman.shadow" version "2.0.0"
+    id "java"
+    id "maven"
+    id "signing"
+    id "com.github.johnrengelman.shadow" version "2.0.2"
 }
 
 group = "org.fluentd.kafka"
@@ -12,10 +13,28 @@ description = """kafka-connect-fluentd"""
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-repositories {
-     maven { url "http://packages.confluent.io/maven/" }
-     maven { url "https://repo.maven.apache.org/maven2" }
+def isDevBuild
+def isCiBuild
+def isReleaseBuild
+def sonatypeRepositoryUrl
+
+if (hasProperty("release")) {
+    isReleaseBuild = true
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+} else if (hasProperty("ci")) {
+    isCiBuild = true
+    version += "-SNAPSHOT"
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+} else {
+    isDevBuild = true
+    version += "-SNAPSHOT"
 }
+
+repositories {
+    maven { url "http://packages.confluent.io/maven/" }
+    maven { url "https://repo.maven.apache.org/maven2" }
+}
+
 dependencies {
     testCompile group: "junit", name: "junit", version:"4.+"
     testCompile group: "org.hamcrest", name: "hamcrest-all", version:"1.3"
@@ -29,4 +48,81 @@ dependencies {
     }
     compile group: "org.komamitsu", name: "fluency", version: "1.4.0"
     compile group: "com.okumin", name: "influent-java", version: "0.4.0-M1"
+}
+
+shadowJar {
+    exclude "org/apache/kafka/**/*.class"
+}
+
+task zip(type: Zip, dependsOn: jar) {
+    description "Create ${archiveName}"
+    archiveName = "${baseName}-${version}.${extension}"
+    into("kafka-connect-fluentd") {
+        from jar.archivePath
+        from configurations.compile.findAll { !(it =~ /org\.apache\.kafka/) }
+    }
+}
+
+task targz(type: Tar, dependsOn: jar) {
+    extension = "tar.gz"
+    description "Create ${archiveName}"
+    archiveName = "${baseName}-${version}.${extension}"
+    compression = Compression.GZIP
+    into("kafka-connect-fluentd") {
+        from jar.archivePath
+        from configurations.compile.findAll { !(it =~ /org\.apache\.kafka/) }
+    }
+}
+
+artifacts {
+    archives jar, shadowJar, targz, zip
+}
+
+signing {
+    required { isReleaseBuild }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        if (isDevBuild) {
+            mavenLocal()
+        } else {
+            mavenDeployer {
+                if (isReleaseBuild) {
+                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                }
+
+                repository(url: sonatypeRepositoryUrl) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
+                pom.project {
+                    name 'kafka-connect-fluentd'
+                    packaging 'jar'
+                    description 'Kafka Connector for Fluentd'
+                    url 'https://github.com/fluent/kafka-connect-fluentd'
+
+                    scm {
+                        url "scm:git@github.com:fluent/kafka-connect-fluentd.git"
+                        connection "scm:git@github.com:fluent/kafka-connect-fluentd.git"
+                        developerConnection "scm:git@github.com:fluent/kafka-connect-fluentd.git"
+                    }
+                    licenses {
+                        license {
+                            name 'Apache-2.0'
+                            url 'https://www.apache.org/licenses/LICENSE-2.0'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'okkez'
+                            name 'Kenji Okimoto'
+                            email 'okimoto@clear-code.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
