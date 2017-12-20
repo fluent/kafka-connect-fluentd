@@ -1,21 +1,20 @@
-# kafka-connect-fluentd
+# Kafka Connect Fluentd Connector
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd?ref=badge_shield)
 [![Build Status](https://travis-ci.org/fluent/kafka-connect-fluentd.svg?branch=master)](https://travis-ci.org/fluent/kafka-connect-fluentd)
 
-## Running in development
+kafka-connect-fluentd is a [Kafka Connector](http://kafka.apache.org/documentation.html#connect) for copying data between Kafka and [Fluentd](https://www.fluentd.org/).
+kafka-connect-fluentd can be alternative to [fluent-plugin-kafka](https://github.com/fluent/fluent-plugin-kafka).
 
-Build jar:
+## Installation
 
-```
-$ ./gradlew jar
-```
+You can download and install kafka-connect-fluentd from [Maven Central](https://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kafka-connect-fluentd%22).
 
-Set up Apache Kafka.
+For more details, see [Installing Plugins](https://docs.confluent.io/current/connect/userguide.html#installing-plugins).
 
-```
-$ tar xf kafka_2.11-0.11.0.0.tgz
-$ cd kafka_2.11-0.11.0.0
-```
+## Running Kafka and Kafka Connector Workers
+
+See [Running Workers](https://docs.confluent.io/current/connect/userguide.html#running-workers).
 
 Run Apache Kafka:
 
@@ -62,6 +61,8 @@ fluentd.connect=localhost:24225
 ```
 
 Setup Fluentd:
+
+See also [Fluentd Installation](https://docs.fluentd.org/v1.0/categories/installation).
 
 ```
 (on terminal 4)
@@ -230,8 +231,6 @@ $ bin/connect-standalone.sh config/connect-standalone.properties \
 (on terminal 4)
 $ fluentd -c fluent.conf
 ```
-
-
 
 ## License
 
