@@ -1,6 +1,6 @@
 # kafka-connect-fluentd
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd?ref=badge_shield)
-
+[![Build Status](https://travis-ci.org/fluent/kafka-connect-fluentd.svg?branch=master)](https://travis-ci.org/fluent/kafka-connect-fluentd)
 
 ## Running in development
 
@@ -232,4 +232,5 @@ $ fluentd -c fluent.conf
 
 
 ## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd?ref=badge_large)
+
+Apache License, Version 2.0
