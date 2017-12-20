@@ -70,7 +70,7 @@ task zip(type: Zip, dependsOn: jar) {
 }
 
 task targz(type: Tar, dependsOn: jar) {
-    extension = "tar.gz"
+    extension = "tgz"
     description "Create ${archiveName}"
     archiveName = "${baseName}-${version}.${extension}"
     compression = Compression.GZIP
