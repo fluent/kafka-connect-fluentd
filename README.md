@@ -103,6 +103,8 @@ See also [kafka-connect benchmark scripts](https://github.com/fluent/fluentd-ben
 
 ### Configuration for FluentdSourceConnector
 
+See also [Influent](https://github.com/okumin/influent).
+
 * fluentd.port
   * Port number to listen. Default: `24224`
 * fluentd.bind
