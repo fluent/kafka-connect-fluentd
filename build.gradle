@@ -50,6 +50,12 @@ dependencies {
     compile group: "com.okumin", name: "influent-java", version: "0.4.0-M1"
 }
 
+task generateJavadoc(type: Javadoc) {
+    source = sourceSets.main.allJava
+    options.locale = "en_US"
+    options.encoding = "UTF-8"
+}
+
 shadowJar {
     exclude "org/apache/kafka/**/*.class"
 }
@@ -74,8 +80,18 @@ task targz(type: Tar, dependsOn: jar) {
     }
 }
 
+task javadocJar(type: Jar, dependsOn: generateJavadoc) {
+    classifier = "javadoc"
+    from "${buildDir}/docs/javadoc"
+}
+
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
 artifacts {
-    archives jar, shadowJar, targz, zip
+    archives jar, shadowJar, targz, zip, javadocJar, sourcesJar
 }
 
 signing {
