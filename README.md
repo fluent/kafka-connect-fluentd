@@ -1,4 +1,6 @@
 # kafka-connect-fluentd
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd?ref=badge_shield)
+
 
 ## Running in development
 
@@ -227,3 +229,7 @@ $ bin/connect-standalone.sh config/connect-standalone.properties \
 $ fluentd -c fluent.conf
 ```
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent%2Fkafka-connect-fluentd?ref=badge_large)
