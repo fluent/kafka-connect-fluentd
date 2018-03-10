@@ -97,22 +97,40 @@ public class MessagePackConverter {
             case BINARY:
                 return new SchemaAndValue(Schema.BYTES_SCHEMA, value.asBinaryValue().asByteArray());
             case MAP: {
-                SchemaBuilder builder = SchemaBuilder.struct().name(name);
-                Map<Value, Value> map = value.asMapValue().map();
-                Map<String, SchemaAndValue> fields = new TreeMap<>();
-                map.forEach((k, v) -> {
-                    String n = k.asStringValue().asString();
-                    fields.put(n, convert(n, v));
-                });
-                fields.forEach((k, v) -> {
-                    builder.field(k, v.schema());
-                });
-                Schema schema = builder.build();
-                Struct struct = new Struct(schema);
-                fields.forEach((k, v) -> {
-                    struct.put(k, v.value());
-                });
-                return new SchemaAndValue(schema, struct);
+                if (config.getFluentdSchemasMapField() != null && config.getFluentdSchemasMapField().contains(name)) {
+                    Map<Value, Value> map = value.asMapValue().map();
+                    Map<String, Object> converted = new TreeMap<>();
+                    Schema valueSchema = null;
+                    for (Map.Entry<Value, Value> entry : map.entrySet()) {
+                        Value k = entry.getKey();
+                        Value v = entry.getValue();
+                        String keyString = k.asStringValue().asString();
+                        SchemaAndValue schemaAndValue = convert(keyString, v);
+                        if (valueSchema == null) {
+                            valueSchema = schemaAndValue.schema();
+                        }
+                        converted.put(keyString, schemaAndValue.value());
+                    };
+                    Schema schema = SchemaBuilder.map(Schema.STRING_SCHEMA, valueSchema).name(name).build();
+                    return new SchemaAndValue(schema, converted);
+                } else {
+                    SchemaBuilder builder = SchemaBuilder.struct().name(name);
+                    Map<Value, Value> map = value.asMapValue().map();
+                    Map<String, SchemaAndValue> fields = new TreeMap<>();
+                    map.forEach((k, v) -> {
+                        String n = k.asStringValue().asString();
+                        fields.put(n, convert(n, v));
+                    });
+                    fields.forEach((k, v) -> {
+                        builder.field(k, v.schema());
+                    });
+                    Schema schema = builder.build();
+                    Struct struct = new Struct(schema);
+                    fields.forEach((k, v) -> {
+                        struct.put(k, v.value());
+                    });
+                    return new SchemaAndValue(schema, struct);
+                }
             }
             case ARRAY: {
                 List<Value> array = value.asArrayValue().list();
@@ -124,7 +142,7 @@ public class MessagePackConverter {
                 return new SchemaAndValue(schema, values);
             }
             default:
-                return null;
+                return SchemaAndValue.NULL;
         }
     }
 }

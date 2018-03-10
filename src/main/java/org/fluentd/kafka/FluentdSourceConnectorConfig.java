@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,7 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public static final String KAFKA_TOPIC = "kafka.topic";
     public static final String FLUENTD_SCHEMAS_ENABLE = "fluentd.schemas.enable";
+    public static final String FLUENTD_SCHEMAS_MAP_FIELD = "fluentd.schemas.map_field";
     public static final String FLUENTD_COUNTER_ENABLED = "fluentd.counter.enabled";
 
     public FluentdSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
@@ -93,6 +95,8 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
                         "Topic for Kafka. null means using Fluentd's tag for topic dynamically. Default: null")
                 .define(FLUENTD_SCHEMAS_ENABLE, Type.BOOLEAN, true, Importance.MEDIUM,
                         "Enable schemas for messages. Default: true")
+                .define(FLUENTD_SCHEMAS_MAP_FIELD, Type.LIST, null, Importance.MEDIUM,
+                        "Field name treated as MAP type. Default: null")
                 .define(FLUENTD_COUNTER_ENABLED, Type.BOOLEAN, false, Importance.MEDIUM,
                         "Enable counter for messages/sec. Default: false");
     }
@@ -167,6 +171,10 @@ public class FluentdSourceConnectorConfig extends AbstractConfig {
 
     public boolean isFluentdSchemasEnable() {
         return getBoolean(FLUENTD_SCHEMAS_ENABLE);
+    }
+
+    public List<String> getFluentdSchemasMapField() {
+        return getList(FLUENTD_SCHEMAS_MAP_FIELD);
     }
 
     public boolean getFluentdCounterEnabled() {
