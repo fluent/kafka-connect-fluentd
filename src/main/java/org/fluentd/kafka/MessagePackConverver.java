@@ -108,8 +108,9 @@ public class MessagePackConverver {
                     String n = k.asStringValue().asString();
                     fields.put(n, convert(n, v));
                 });
-                fields.forEach((k, v) -> {
-                    builder.field(k, v.schema());
+                // for stability of schema fields order
+                fields.keySet().stream().sorted().forEach((k) -> {
+                    builder.field(k, fields.get(k).schema());
                 });
                 Schema schema = builder.build();
                 Struct struct = new Struct(schema);
