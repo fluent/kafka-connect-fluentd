@@ -67,7 +67,7 @@ public class FluentdSourceConnectorTest {
         PowerMock.replayAll();
         connector.start(buildSourceProperties());
         List<Map<String, String>> taskConfigs = connector.taskConfigs(10);
-        Assert.assertEquals(1, taskConfigs.size());
+        Assert.assertEquals(10, taskConfigs.size());
         Assert.assertEquals("24225", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_PORT));
         Assert.assertEquals("127.0.0.1", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_BIND));
         Assert.assertEquals("100", taskConfigs.get(0).get(FluentdSourceConnectorConfig.FLUENTD_CHUNK_SIZE_LIMIT));
