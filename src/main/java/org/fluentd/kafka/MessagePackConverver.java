@@ -28,11 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MessagePackConverver {
     static final Logger log = LoggerFactory.getLogger(MessagePackConverver.class);
@@ -103,7 +99,7 @@ public class MessagePackConverver {
             case MAP: {
                 SchemaBuilder builder = SchemaBuilder.struct().name(name);
                 Map<Value, Value> map = value.asMapValue().map();
-                Map<String, SchemaAndValue> fields = new HashMap<>();
+                Map<String, SchemaAndValue> fields = new TreeMap<>();
                 map.forEach((k, v) -> {
                     String n = k.asStringValue().asString();
                     fields.put(n, convert(n, v));
