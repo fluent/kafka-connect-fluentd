@@ -30,11 +30,11 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 
-public class MessagePackConverver {
-    static final Logger log = LoggerFactory.getLogger(MessagePackConverver.class);
+public class MessagePackConverter {
+    static final Logger log = LoggerFactory.getLogger(MessagePackConverter.class);
     private final FluentdSourceConnectorConfig config;
 
-    public MessagePackConverver(final FluentdSourceConnectorConfig config) {
+    public MessagePackConverter(final FluentdSourceConnectorConfig config) {
         this.config = config;
     }
 

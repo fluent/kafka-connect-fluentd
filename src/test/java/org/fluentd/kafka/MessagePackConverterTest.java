@@ -31,7 +31,7 @@ public class MessagePackConverterTest {
                         ValueFactory.newString("flag"),
                         ValueFactory.newBoolean(true)));
 
-        MessagePackConverver converter = new MessagePackConverver(config);
+        MessagePackConverter converter = new MessagePackConverter(config);
         SourceRecord sourceRecord = converter.convert("topic", "tag", 0L, eventEntry);
 
         assertEquals(Schema.STRING_SCHEMA, sourceRecord.keySchema());
@@ -53,7 +53,7 @@ public class MessagePackConverterTest {
                         ValueFactory.newString("message"),
                         ValueFactory.newNil()));
 
-        MessagePackConverver converter = new MessagePackConverver(config);
+        MessagePackConverter converter = new MessagePackConverter(config);
         SourceRecord sourceRecord = converter.convert("topic", "tag", 0L, eventEntry);
 
         assertEquals(Schema.STRING_SCHEMA, sourceRecord.keySchema());
@@ -79,7 +79,7 @@ public class MessagePackConverterTest {
                                 ValueFactory.newInteger(42)
                         )));
 
-        MessagePackConverver converter = new MessagePackConverver(config);
+        MessagePackConverter converter = new MessagePackConverter(config);
         SourceRecord sourceRecord = converter.convert("topic", "tag", 0L, eventEntry);
 
         assertEquals(Schema.STRING_SCHEMA, sourceRecord.keySchema());
@@ -108,7 +108,7 @@ public class MessagePackConverterTest {
                                 ValueFactory.newFloat(42.195f)
                         )));
 
-        MessagePackConverver converter = new MessagePackConverver(config);
+        MessagePackConverter converter = new MessagePackConverter(config);
         SourceRecord sourceRecord = converter.convert("topic", "tag", 0L, eventEntry);
 
         assertEquals(Schema.STRING_SCHEMA, sourceRecord.keySchema());
@@ -132,7 +132,7 @@ public class MessagePackConverterTest {
                         ValueFactory.newString("message"),
                         ValueFactory.newString("This is a message.")));
 
-        MessagePackConverver converter = new MessagePackConverver(config);
+        MessagePackConverter converter = new MessagePackConverter(config);
         SourceRecord sourceRecord = converter.convert("topic", "tag", 0L, eventEntry);
 
         Assert.assertNull(sourceRecord.keySchema());
