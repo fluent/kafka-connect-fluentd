@@ -40,7 +40,7 @@ public class FluentdSourceTask extends SourceTask {
 
     private static final class Reporter implements Runnable {
         private final AtomicLong counter = new AtomicLong();
-        private AtomicBoolean isActive = new AtomicBoolean(true);
+        private final AtomicBoolean isActive = new AtomicBoolean(false);
 
         void add(final int up) {
             counter.addAndGet(up);
@@ -52,6 +52,7 @@ public class FluentdSourceTask extends SourceTask {
 
         @Override
         public void run() {
+            isActive.set(true);
             long lastChecked = System.currentTimeMillis();
             while (isActive.get()) {
                 try {
@@ -165,5 +166,9 @@ public class FluentdSourceTask extends SourceTask {
             reporter.stop();
         }
         server.shutdown();
+    }
+
+    public boolean isReporterRunning() {
+        return config.getFluentdCounterEnabled() && reporter.isActive.get();
     }
 }
