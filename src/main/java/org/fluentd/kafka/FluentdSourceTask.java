@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FluentdSourceTask extends SourceTask {
@@ -39,15 +40,20 @@ public class FluentdSourceTask extends SourceTask {
 
     private static final class Reporter implements Runnable {
         private final AtomicLong counter = new AtomicLong();
+        private AtomicBoolean isActive = new AtomicBoolean(true);
 
         void add(final int up) {
             counter.addAndGet(up);
         }
 
+        void stop() {
+            isActive.set(false);
+        }
+
         @Override
         public void run() {
             long lastChecked = System.currentTimeMillis();
-            while (true) {
+            while (isActive.get()) {
                 try {
                     Thread.sleep(100);
                 } catch (final InterruptedException e) {
@@ -155,6 +161,9 @@ public class FluentdSourceTask extends SourceTask {
 
     @Override
     public void stop() {
+        if (config.getFluentdCounterEnabled()) {
+            reporter.stop();
+        }
         server.shutdown();
     }
 }
