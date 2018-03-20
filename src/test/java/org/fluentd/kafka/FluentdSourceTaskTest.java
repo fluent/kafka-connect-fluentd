@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
@@ -47,13 +48,19 @@ public class FluentdSourceTaskTest {
     public void tearDown() throws InterruptedException {
         task.stop();
         Thread.sleep(500);
+        assert(!task.isReporterRunning());
     }
 
     @Test
     public void oneRecord() throws InterruptedException, IOException {
         Map<String, String> config = new HashMap<>();
         config.put(FluentdSourceConnectorConfig.FLUENTD_SCHEMAS_ENABLE, "false");
+        config.put(FluentdSourceConnectorConfig.FLUENTD_COUNTER_ENABLED, "true");
         task.start(config);
+        while (!task.isReporterRunning()) {
+            TimeUnit.MILLISECONDS.sleep(10);
+        }
+        assert(task.isReporterRunning());
         Map<String, Object> record = new HashMap<>();
         record.put("message", "This is a test message");
         fluency.emit("test", record);
@@ -71,6 +78,7 @@ public class FluentdSourceTaskTest {
         Map<String, String> config = new HashMap<>();
         config.put(FluentdSourceConnectorConfig.FLUENTD_SCHEMAS_ENABLE, "false");
         task.start(config);
+        assert(!task.isReporterRunning());
         Map<String, Object> record = new HashMap<>();
         record.put("message", null);
         fluency.emit("test", record);
