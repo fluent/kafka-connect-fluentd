@@ -2,7 +2,7 @@ plugins {
     id "java"
     id "maven"
     id "signing"
-    id "com.github.johnrengelman.shadow" version "2.0.2"
+    id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
 group = "org.fluentd.kafka"
@@ -52,6 +52,7 @@ dependencies {
 
 task generateJavadoc(type: Javadoc) {
     source = sourceSets.main.allJava
+    classpath = sourceSets.main.runtimeClasspath
     options.locale = "en_US"
     options.encoding = "UTF-8"
 }
@@ -61,32 +62,30 @@ shadowJar {
 }
 
 task zip(type: Zip, dependsOn: jar) {
-    description "Create ${archiveName}"
-    archiveName = "${baseName}-${version}.${extension}"
+    description "Create ${archiveFileName}"
     into("kafka-connect-fluentd") {
-        from jar.archivePath
+        from jar.archiveFile
         from configurations.compile.findAll { !(it =~ /org\.apache\.kafka/) }
     }
 }
 
 task targz(type: Tar, dependsOn: jar) {
-    extension = "tgz"
-    description "Create ${archiveName}"
-    archiveName = "${baseName}-${version}.${extension}"
+    archiveExtension = "tgz"
+    description "Create ${archiveFileName}"
     compression = Compression.GZIP
     into("kafka-connect-fluentd") {
-        from jar.archivePath
+        from jar.archiveFile
         from configurations.compile.findAll { !(it =~ /org\.apache\.kafka/) }
     }
 }
 
 task javadocJar(type: Jar, dependsOn: generateJavadoc) {
-    classifier = "javadoc"
+    archiveClassifier = "javadoc"
     from "${buildDir}/docs/javadoc"
 }
 
 task sourcesJar(type: Jar) {
-    classifier = "sources"
+    archiveClassifier = "sources"
     from sourceSets.main.allSource
 }
 
