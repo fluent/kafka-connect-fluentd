@@ -56,7 +56,9 @@ public class FluentdSourceConnector extends SourceConnector {
     public List<Map<String, String>> taskConfigs(int taskMax) {
         //TODO: Define the individual task configurations that will be executed.
         List<Map<String, String>> taskConfigs = new ArrayList<>();
-        taskConfigs.add(this.properties);
+        for (int i = 0; i < taskMax; ++i) {
+            taskConfigs.add(this.properties);
+        }
         return taskConfigs;
     }
 

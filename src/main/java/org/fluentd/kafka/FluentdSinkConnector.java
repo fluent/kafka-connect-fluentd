@@ -59,7 +59,9 @@ public class FluentdSinkConnector extends SinkConnector {
     public List<Map<String, String>> taskConfigs(int maxTasks) {
         //TODO: Define the individual task configurations that will be executed.
         List<Map<String, String>> taskConfigs = new ArrayList<>();
-        taskConfigs.add(this.properties);
+        for (int i = 0; i < maxTasks; ++i) {
+            taskConfigs.add(this.properties);
+        }
         return taskConfigs;
     }
 

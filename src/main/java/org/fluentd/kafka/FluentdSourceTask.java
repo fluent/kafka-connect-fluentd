@@ -24,6 +24,8 @@ import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,7 @@ public class FluentdSourceTask extends SourceTask {
     private FluentdSourceConnectorConfig config;
     private ForwardServer server;
     private final ConcurrentLinkedDeque<SourceRecord> queue = new ConcurrentLinkedDeque<>();
+    private static final Object startLock = new Object();
 
     private static final class Reporter implements Runnable {
         private final AtomicLong counter = new AtomicLong();
@@ -132,10 +135,17 @@ public class FluentdSourceTask extends SourceTask {
                 builder.workerPoolSize(config.getFluentdWorkerPoolSize());
             }
 
-            server = builder.build();
+            synchronized (startLock) {
+                if (!isFluentdPortAvailable(config.getFluentdPort())) {
+                    log.info("influent server is already running");
+                    return;
+                }
+                server = builder.build();
+            }
         } catch (FluentdConnectorConfigError ex) {
             throw new ConnectException(ex);
         }
+
         server.start();
         if (config.getFluentdCounterEnabled()) {
             new Thread(reporter).start();
@@ -170,5 +180,15 @@ public class FluentdSourceTask extends SourceTask {
 
     public boolean isReporterRunning() {
         return config.getFluentdCounterEnabled() && reporter.isActive.get();
+    }
+
+    private boolean isFluentdPortAvailable(int port) {
+        try (ServerSocket ss = new ServerSocket(port)) {
+            ss.setReuseAddress(true);
+            return true;
+        } catch (IOException ignored) {
+        }
+
+        return false;
     }
 }
